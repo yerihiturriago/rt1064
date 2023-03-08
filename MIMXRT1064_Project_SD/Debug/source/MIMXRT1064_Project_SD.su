@@ -1,0 +1,5 @@
+D:\Personal projects\Drum project\Desarrollo\RT1064\code\MIMXRT1064_Project_SD\drivers/fsl_gpio.h:101:20:GPIO_WritePinOutput	24	static
+../source/MIMXRT1064_Project_SD.c:58:5:main	24	static
+../source/MIMXRT1064_Project_SD.c:91:6:thrd_main	24	static
+../source/MIMXRT1064_Project_SD.c:110:6:thrd_sd	24	static
+../source/MIMXRT1064_Project_SD.c:173:6:SDCARD_DetectCallBack	16	static

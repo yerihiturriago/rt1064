@@ -1,0 +1,8 @@
+D:\Personal projects\Drum project\Desarrollo\RT1064\code\MIMXRT1064_Project_SD\CMSIS/mpu_armv7.h:191:22:ARM_MPU_Enable	16	static
+D:\Personal projects\Drum project\Desarrollo\RT1064\code\MIMXRT1064_Project_SD\CMSIS/mpu_armv7.h:204:22:ARM_MPU_Disable	4	static
+D:\Personal projects\Drum project\Desarrollo\RT1064\code\MIMXRT1064_Project_SD\drivers/fsl_clock.h:1434:24:CLOCK_GetMux	16	static
+D:\Personal projects\Drum project\Desarrollo\RT1064\code\MIMXRT1064_Project_SD\drivers/fsl_clock.h:1486:24:CLOCK_GetDiv	16	static
+D:\Personal projects\Drum project\Desarrollo\RT1064\code\MIMXRT1064_Project_SD\drivers/fsl_clock.h:1547:24:CLOCK_GetOscFreq	4	static
+../board/board.c:25:10:BOARD_DebugConsoleSrcFreq	24	static
+../board/board.c:44:6:BOARD_InitDebugConsole	16	static
+../board/board.c:236:6:BOARD_ConfigMPU	32	static
