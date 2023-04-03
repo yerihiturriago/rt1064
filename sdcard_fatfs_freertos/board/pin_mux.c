@@ -12,11 +12,23 @@ package_id: MIMXRT1064DVL6A
 mcu_data: ksdk2_0
 processor_version: 12.0.1
 board: MIMXRT1064-EVK
+pin_labels:
+- {pin_num: B11, pin_signal: GPIO_B1_01, label: I2S_DIN, identifier: LCDIF_D13;I2S_DIN}
+- {pin_num: C11, pin_signal: GPIO_B1_02, label: I2S_BCLK, identifier: LCDIF_D14;I2S_BCLK}
+- {pin_num: D11, pin_signal: GPIO_B1_03, label: I2S_LCLK, identifier: LCDIF_D15;I2S_LCLK}
+- {pin_num: B12, pin_signal: GPIO_B1_07, label: I2S_LCLK, identifier: ENET_TXD0;I2S_LCLK}
+- {pin_num: B13, pin_signal: GPIO_B1_10, label: I2S_BCLK, identifier: ENET_TX_CLK;I2S_BCLK}
+- {pin_num: B14, pin_signal: GPIO_B1_15, label: I2S_DIN, identifier: BACKLIGHT_CTL;I2S_DIN}
+- {pin_num: F14, pin_signal: GPIO_AD_B0_09, label: LED_F14, identifier: LED_F14}
+- {pin_num: M5, pin_signal: GPIO_SD_B1_01, label: SAI_DATA, identifier: FlexSPI_D2_B;SAI_DATA}
+- {pin_num: M3, pin_signal: GPIO_SD_B1_02, label: SAI_WS, identifier: FlexSPI_D1_B;SAI_WS}
+- {pin_num: M4, pin_signal: GPIO_SD_B1_03, label: SAI_BCLK, identifier: FlexSPI_D0_B;SAI_BCLK}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 
 #include "fsl_common.h"
 #include "fsl_iomuxc.h"
+#include "fsl_gpio.h"
 #include "pin_mux.h"
 
 /* FUNCTION ************************************************************************************************************
@@ -45,6 +57,12 @@ BOARD_InitPins:
   - {pin_num: H2, peripheral: USDHC1, signal: 'usdhc_data, 2', pin_signal: GPIO_SD_B0_04}
   - {pin_num: J2, peripheral: USDHC1, signal: 'usdhc_data, 3', pin_signal: GPIO_SD_B0_05}
   - {pin_num: C14, peripheral: USDHC1, signal: usdhc_vselect, pin_signal: GPIO_B1_14}
+  - {pin_num: F14, peripheral: GPIO1, signal: 'gpio_io, 09', pin_signal: GPIO_AD_B0_09, direction: OUTPUT}
+  - {pin_num: B11, peripheral: SAI1, signal: sai_tx_data0, pin_signal: GPIO_B1_01, identifier: I2S_DIN}
+  - {pin_num: C11, peripheral: SAI1, signal: sai_tx_bclk, pin_signal: GPIO_B1_02, identifier: I2S_BCLK}
+  - {pin_num: D11, peripheral: SAI1, signal: sai_tx_sync, pin_signal: GPIO_B1_03, identifier: I2S_LCLK}
+  - {pin_num: E11, peripheral: SAI1, signal: sai_rx_bclk, pin_signal: GPIO_B0_15}
+  - {pin_num: E10, peripheral: SAI1, signal: sai_rx_sync, pin_signal: GPIO_B0_14}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 
@@ -57,9 +75,24 @@ BOARD_InitPins:
 void BOARD_InitPins(void) {
   CLOCK_EnableClock(kCLOCK_Iomuxc);           
 
+  /* GPIO configuration of LED_F14 on GPIO_AD_B0_09 (pin F14) */
+  gpio_pin_config_t LED_F14_config = {
+      .direction = kGPIO_DigitalOutput,
+      .outputLogic = 0U,
+      .interruptMode = kGPIO_NoIntmode
+  };
+  /* Initialize GPIO functionality on GPIO_AD_B0_09 (pin F14) */
+  GPIO_PinInit(GPIO1, 9U, &LED_F14_config);
+
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_05_GPIO1_IO05, 0U); 
+  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_09_GPIO1_IO09, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_12_LPUART1_TX, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_13_LPUART1_RX, 0U); 
+  IOMUXC_SetPinMux(IOMUXC_GPIO_B0_14_SAI1_RX_SYNC, 0U); 
+  IOMUXC_SetPinMux(IOMUXC_GPIO_B0_15_SAI1_RX_BCLK, 0U); 
+  IOMUXC_SetPinMux(IOMUXC_GPIO_B1_01_SAI1_TX_DATA00, 0U); 
+  IOMUXC_SetPinMux(IOMUXC_GPIO_B1_02_SAI1_TX_BCLK, 0U); 
+  IOMUXC_SetPinMux(IOMUXC_GPIO_B1_03_SAI1_TX_SYNC, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_B1_12_GPIO2_IO28, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_B1_14_USDHC1_VSELECT, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B0_00_USDHC1_CMD, 0U); 

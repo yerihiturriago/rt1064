@@ -9,7 +9,12 @@
 /***********************************************************************************************************************
  * Included files
  **********************************************************************************************************************/
+#include "fsl_edma.h"
+#include "fsl_dmamux.h"
 #include "fsl_common.h"
+#include "fsl_sai.h"
+#include "fsl_sai_edma.h"
+#include "fsl_clock.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -19,9 +24,46 @@ extern "C" {
  * Definitions
  **********************************************************************************************************************/
 /* Definitions for BOARD_InitPeripherals functional group */
+/* Used DMA device. */
+#define DMA0_DMA_BASEADDR DMA0
+/* Associated DMAMUX device that is used for muxing of requests. */
+#define DMA0_DMAMUX_BASEADDR DMAMUX
 /* BOARD_InitPeripherals defines for SEMC */
 /* Definition of peripheral ID. */
 #define SEMC_PERIPHERAL SEMC
+/* Definition of peripheral ID */
+#define SAI1_PERIPHERAL SAI1
+/* Bit clock source frequency used for calculating the bit clock divider in the TxSetBitClockRate function. */
+#define SAI1_TX_BCLK_SOURCE_CLOCK_HZ 150000000UL
+/* Sample rate used for calculating the bit clock divider in the TxSetBitClockRate function. */
+#define SAI1_TX_SAMPLE_RATE 48000UL
+/* Word width used for calculating the bit clock divider in the TxSetBitClockRate function. */
+#define SAI1_TX_WORD_WIDTH 16U
+/* Number of words within frame used for calculating the bit clock divider in the TxSetBitClockRate function. */
+#define SAI1_TX_WORDS_PER_FRAME 2U
+/* SAI1 eDMA source request. */
+#define SAI1_TX_DMA_REQUEST kDmaRequestMuxSai1Tx
+/* Selected eDMA channel number. */
+#define SAI1_TX_DMA_CHANNEL 0
+/* DMAMUX device that is used for muxing of the request. */
+#define SAI1_TX_DMAMUX_BASEADDR DMAMUX
+/* Used DMA device. */
+#define SAI1_TX_DMA_BASEADDR DMA0
+
+/***********************************************************************************************************************
+ * Global variables
+ **********************************************************************************************************************/
+extern const edma_config_t DMA0_config;
+extern sai_transceiver_t SAI1_Tx_config;
+extern edma_handle_t SAI1_TX_Handle;
+extern void * p_sai_data;
+extern sai_edma_handle_t SAI1_SAI_Tx_eDMA_Handle;
+
+/***********************************************************************************************************************
+ * Callback functions
+ **********************************************************************************************************************/
+/* SAI transfer Tx callback function for the SAI1 component (init. function BOARD_InitPeripherals)*/
+extern void fun_edma_callback(I2S_Type *base, sai_edma_handle_t *handle, status_t status, void *userData);
 
 /***********************************************************************************************************************
  * Initialization functions

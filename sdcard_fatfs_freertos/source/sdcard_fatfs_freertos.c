@@ -23,6 +23,8 @@
 #include <cr_section_macros.h>
 #include "fsl_common.h"
 #include "fsl_semc.h"
+#include "fsl_flexio_i2s_edma.h"
+#include "peripherals.h"
 
 /*******************************************************************************
  * Definitions
@@ -109,9 +111,28 @@ TaskHandle_t fileAccessTaskHandle2;
 void SEMC_SDRAMReadWrite32Bit(void);
 
 //__DATA(RAM4) unsigned char myBuffer[1024];
-__DATA(RAM4) uint32_t sdram_data[256000];
+__DATA(RAM4) int sdram_data[100];
+uint8_t s_buffer[2][32];
+
+void * p_sai_data;
+
+sai_transfer_t xfer[2U] = {
+    {
+        .data     = s_buffer[0],
+        .dataSize = 320,
+    },
+    {
+        .data     = s_buffer[1],
+        .dataSize = 320,
+    },
+};
+
+void fun_edma_callback(I2S_Type *base, sai_edma_handle_t *handle, status_t status, void *userData)
+{
+	printf("sai callback\r\n");
 
 
+}
 /*******************************************************************************
  * Code
  ******************************************************************************/
@@ -181,12 +202,33 @@ int main(void)
     BOARD_BootClockRUN();
     BOARD_InitDebugConsole();
     BOARD_InitSEMC();
+    BOARD_InitBootPeripherals();
 
-    PRINTF("\r\nSDCARD fatfs freertos example.\r\n");
+
+    PRINTF("\r\nSDCARD fatfs freertos, sdram, flexio i2s example.\r\n");
+
 //    SEMC_SDRAMReadWrite32Bit();
     sdram_data[0] = 55;
-    sdram_data[256000 - 1] = 55;
-    printf("ram data[0] = %d, [256000] = %d\r\n", sdram_data[0], sdram_data[256000 - 1]);
+    sdram_data[255999] = 55;
+    printf("ram data[0] = %d, [256000] = %d\r\n", sdram_data[0], sdram_data[255999]);
+
+    p_sai_data = (void*)sdram_data;
+//    PRINTF("\r\nsai start.\r\n");
+
+    printf("sai transfer. dataSize %% bytesPerFrame = %d, bytesPerFrame = %d, dataSize = %d, count = %d\r\n",
+    		(int)SAI1_SAI_Tx_eDMA_Handle.transferSize % (SAI1_SAI_Tx_eDMA_Handle.bytesPerFrame*SAI1_SAI_Tx_eDMA_Handle.count),
+    		SAI1_SAI_Tx_eDMA_Handle.bytesPerFrame,
+			100,
+			SAI1_SAI_Tx_eDMA_Handle.count
+			);
+    int r = SAI_TransferSendLoopEDMA(SAI1_PERIPHERAL, &SAI1_SAI_Tx_eDMA_Handle, &xfer[0], 2);
+//    int r = SAI_TransferSendEDMA(SAI1_PERIPHERAL, &SAI1_SAI_Tx_eDMA_Handle, &xfer);
+    printf("sai transfer. r = %d\r\n", r);
+
+    return 0;
+
+
+
 
     if (pdPASS != xTaskCreate(FileAccessTask1, "FileAccessTask1", ACCESSFILE_TASK_STACK_SIZE, NULL,
                               ACCESSFILE_TASK_PRIORITY, &fileAccessTaskHandle1))

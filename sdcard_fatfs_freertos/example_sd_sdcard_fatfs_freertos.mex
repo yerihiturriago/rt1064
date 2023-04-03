@@ -25,6 +25,18 @@
          </generated_project_files>
          <pins_profile>
             <processor_version>12.0.1</processor_version>
+            <pin_labels>
+               <pin_label pin_num="B11" pin_signal="GPIO_B1_01" label="I2S_DIN" identifier="LCDIF_D13;I2S_DIN"/>
+               <pin_label pin_num="C11" pin_signal="GPIO_B1_02" label="I2S_BCLK" identifier="LCDIF_D14;I2S_BCLK"/>
+               <pin_label pin_num="D11" pin_signal="GPIO_B1_03" label="I2S_LCLK" identifier="LCDIF_D15;I2S_LCLK"/>
+               <pin_label pin_num="B12" pin_signal="GPIO_B1_07" label="I2S_LCLK" identifier="ENET_TXD0;I2S_LCLK"/>
+               <pin_label pin_num="B13" pin_signal="GPIO_B1_10" label="I2S_BCLK" identifier="ENET_TX_CLK;I2S_BCLK"/>
+               <pin_label pin_num="B14" pin_signal="GPIO_B1_15" label="I2S_DIN" identifier="BACKLIGHT_CTL;I2S_DIN"/>
+               <pin_label pin_num="F14" pin_signal="GPIO_AD_B0_09" label="LED_F14" identifier="LED_F14"/>
+               <pin_label pin_num="M5" pin_signal="GPIO_SD_B1_01" label="SAI_DATA" identifier="FlexSPI_D2_B;SAI_DATA"/>
+               <pin_label pin_num="M3" pin_signal="GPIO_SD_B1_02" label="SAI_WS" identifier="FlexSPI_D1_B;SAI_WS"/>
+               <pin_label pin_num="M4" pin_signal="GPIO_SD_B1_03" label="SAI_BCLK" identifier="FlexSPI_D0_B;SAI_BCLK"/>
+            </pin_labels>
             <power_domains/>
          </pins_profile>
          <functions_list>
@@ -47,12 +59,22 @@
                         <data>true</data>
                      </feature>
                   </dependency>
+                  <dependency resourceType="Peripheral" resourceId="SAI1" description="Peripheral SAI1 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
+                     <feature name="initialized" evaluation="equal">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
                      </feature>
                   </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.iomuxc" description="Pins initialization requires the IOMUXC Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
+                     <feature name="enabled" evaluation="equal" configuration="core0">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.igpio" description="Pins initialization requires the IGPIO Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
                      </feature>
@@ -70,6 +92,28 @@
                   <pin peripheral="USDHC1" signal="usdhc_data, 2" pin_num="H2" pin_signal="GPIO_SD_B0_04"/>
                   <pin peripheral="USDHC1" signal="usdhc_data, 3" pin_num="J2" pin_signal="GPIO_SD_B0_05"/>
                   <pin peripheral="USDHC1" signal="usdhc_vselect" pin_num="C14" pin_signal="GPIO_B1_14"/>
+                  <pin peripheral="GPIO1" signal="gpio_io, 09" pin_num="F14" pin_signal="GPIO_AD_B0_09">
+                     <pin_features>
+                        <pin_feature name="direction" value="OUTPUT"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="SAI1" signal="sai_tx_data0" pin_num="B11" pin_signal="GPIO_B1_01">
+                     <pin_features>
+                        <pin_feature name="identifier" value="I2S_DIN"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="SAI1" signal="sai_tx_bclk" pin_num="C11" pin_signal="GPIO_B1_02">
+                     <pin_features>
+                        <pin_feature name="identifier" value="I2S_BCLK"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="SAI1" signal="sai_tx_sync" pin_num="D11" pin_signal="GPIO_B1_03">
+                     <pin_features>
+                        <pin_feature name="identifier" value="I2S_LCLK"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="SAI1" signal="sai_rx_bclk" pin_num="E11" pin_signal="GPIO_B0_15"/>
+                  <pin peripheral="SAI1" signal="sai_rx_sync" pin_num="E10" pin_signal="GPIO_B0_14"/>
                </pins>
             </function>
          </functions_list>
@@ -390,6 +434,26 @@
                   <data type="Version">2.3.0</data>
                </feature>
             </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.sai" description="SAI Driver not found in the toolchain/IDE project. Project will not compile!" problem_level="2" source="Peripherals">
+               <feature name="enabled" evaluation="equal">
+                  <data type="Boolean">true</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.sai" description="Unsupported version of the SAI Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. Project might not compile correctly." problem_level="1" source="Peripherals">
+               <feature name="version" evaluation="greaterOrEqual">
+                  <data type="Version">2.3.6</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.edma" description="EDMA Driver not found in the toolchain/IDE project. Project will not compile!" problem_level="2" source="Peripherals">
+               <feature name="enabled" evaluation="equal">
+                  <data type="Boolean">true</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.edma" description="Unsupported version of the EDMA Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. Project might not compile correctly." problem_level="1" source="Peripherals">
+               <feature name="version" evaluation="greaterOrEqual">
+                  <data type="Version">2.4.0</data>
+               </feature>
+            </dependency>
          </dependencies>
          <generated_project_files>
             <file path="board/peripherals.c" update_enabled="true"/>
@@ -403,7 +467,58 @@
             <functional_group name="BOARD_InitPeripherals" uuid="36b9abcc-efb9-4d25-b3af-e5df8d7d3844" called_from_default_init="true" id_prefix="" core="core0">
                <description></description>
                <options/>
-               <dependencies/>
+               <dependencies>
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="SAI1.i2s_txd0" description="SAI1.TX DATA (0) pin needs to be routed" problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="routed" evaluation="equal">
+                        <data type="Boolean">true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="SAI1.i2s_tclk" description="SAI1.TX BCLK pin needs to be routed" problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="routed" evaluation="equal">
+                        <data type="Boolean">true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="SAI1.i2s_tfs" description="SAI1.TX SYNC pin needs to be routed" problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="routed" evaluation="equal">
+                        <data type="Boolean">true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="SAI1.i2s_rclk" description="SAI1.RX BCLK pin needs to be routed" problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="routed" evaluation="equal">
+                        <data type="Boolean">true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="SAI1.i2s_rfs" description="SAI1.RX SYNC pin needs to be routed" problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="routed" evaluation="equal">
+                        <data type="Boolean">true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.sai_edma" description="The fsl_sai_edma driver is missing in the project  (required for the eDMA mode)." problem_level="2" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="enabled" evaluation="equal">
+                        <data type="Boolean">true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.sai_edma" description="The compatible version of the fsl_sai_edma driver is not available in the project  (required for the eDMA mode)." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="version" evaluation="compatible">
+                        <data type="Version">2.1.5</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="ClockOutput" resourceId="IPG_CLK_ROOT" description="IPG_CLK_ROOT is inactive." problem_level="2" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="frequency" evaluation="greaterThan">
+                        <data type="Frequency" unit="Hz">0</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.dmamux" description="The fsl_dmamux driver is missing in the project  (required for the eDMA)." problem_level="2" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="enabled" evaluation="equal">
+                        <data type="Boolean">true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.dmamux" description="The compatible version of the fsl_dmamux driver is not available in the project  (required for the eDMA)." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="version" evaluation="compatible">
+                        <data type="Version">2.0.2</data>
+                     </feature>
+                  </dependency>
+               </dependencies>
                <instances>
                   <instance name="NVIC" uuid="3b109123-3bf0-4758-8b63-e2ea7d9812d4" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="nvic">
@@ -471,6 +586,152 @@
                            <setting name="refreshBurstLen" value="1"/>
                         </struct>
                         <array name="sdramArray"/>
+                     </config_set>
+                  </instance>
+                  <instance name="SAI1" uuid="dfc60bdf-e73b-44a9-9866-8f789f2e9399" type="sai" type_id="sai_d277a9f96e6a702cd0cbe3311dc8aff9" mode="edma" peripheral="SAI1" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="fsl_sai">
+                        <setting name="usage" value="playback"/>
+                        <array name="signal_config">
+                           <struct name="0">
+                              <setting name="sourceTx" value="Tx"/>
+                           </struct>
+                           <struct name="1">
+                              <setting name="sourceTx" value="Tx"/>
+                           </struct>
+                        </array>
+                        <struct name="syncSwapI"/>
+                        <struct name="bclkTxSetting"/>
+                        <struct name="syncTxSetting"/>
+                        <struct name="whole">
+                           <struct name="tx_group">
+                              <struct name="sai_transceiver">
+                                 <struct name="bitClock">
+                                    <setting name="modeM" value="master"/>
+                                    <setting name="bitClockSource" value="kSAI_BclkSourceBusclk"/>
+                                    <setting name="bitClockSourceFreq" value="BOARD_BootClockRUN"/>
+                                    <setting name="bclkPolarityM" value="kSAI_PolarityActiveLow"/>
+                                    <setting name="bclkInputDelayM" value="false"/>
+                                 </struct>
+                                 <struct name="frameSync">
+                                    <setting name="modeM" value="master"/>
+                                    <setting name="frameSyncWidthM" value="16"/>
+                                    <setting name="frameSyncPolarityM" value="kSAI_PolarityActiveLow"/>
+                                    <setting name="frameSyncEarlyM" value="false"/>
+                                    <setting name="frameSyncGenerateOnDemandM" value="false"/>
+                                 </struct>
+                                 <setting name="sampleRate_Hz" value="kSAI_SampleRate48KHz"/>
+                                 <set name="channelMask">
+                                    <selected>
+                                       <id>kSAI_Channel0Mask</id>
+                                    </selected>
+                                 </set>
+                                 <struct name="serialData">
+                                    <setting name="dataMode" value="kSAI_DataPinStateTriState"/>
+                                    <setting name="differentFirstWord" value="false"/>
+                                    <setting name="sameDataWordLengthM" value="kSAI_WordWidth16bits"/>
+                                    <setting name="dataOrder" value="kSAI_DataMSB"/>
+                                    <setting name="dataFirstBitShiftedM" value="16"/>
+                                    <setting name="dataWordNumM" value="2"/>
+                                    <struct name="dataMasked_config">
+                                       <array name="dataMasked_L">
+                                          <setting name="0" value="false"/>
+                                          <setting name="1" value="false"/>
+                                          <setting name="2" value="false"/>
+                                          <setting name="3" value="false"/>
+                                          <setting name="4" value="false"/>
+                                          <setting name="5" value="false"/>
+                                          <setting name="6" value="false"/>
+                                          <setting name="7" value="false"/>
+                                          <setting name="8" value="false"/>
+                                          <setting name="9" value="false"/>
+                                          <setting name="10" value="false"/>
+                                          <setting name="11" value="false"/>
+                                          <setting name="12" value="false"/>
+                                          <setting name="13" value="false"/>
+                                          <setting name="14" value="false"/>
+                                          <setting name="15" value="false"/>
+                                       </array>
+                                       <array name="dataMasked_H">
+                                          <setting name="0" value="false"/>
+                                          <setting name="1" value="false"/>
+                                          <setting name="2" value="false"/>
+                                          <setting name="3" value="false"/>
+                                          <setting name="4" value="false"/>
+                                          <setting name="5" value="false"/>
+                                          <setting name="6" value="false"/>
+                                          <setting name="7" value="false"/>
+                                          <setting name="8" value="false"/>
+                                          <setting name="9" value="false"/>
+                                          <setting name="10" value="false"/>
+                                          <setting name="11" value="false"/>
+                                          <setting name="12" value="false"/>
+                                          <setting name="13" value="false"/>
+                                          <setting name="14" value="false"/>
+                                          <setting name="15" value="false"/>
+                                       </array>
+                                    </struct>
+                                 </struct>
+                                 <struct name="fifo">
+                                    <setting name="fifoWatermarkM" value="16"/>
+                                    <setting name="fifoCombine" value="kSAI_FifoCombineDisabled"/>
+                                    <setting name="fifoPacking" value="kSAI_FifoPackingDisabled"/>
+                                    <setting name="fifoContinueOneError" value="false"/>
+                                 </struct>
+                              </struct>
+                              <struct name="edma_group">
+                                 <setting name="enable_edma_channel" value="true"/>
+                                 <struct name="edma_channel">
+                                    <setting name="uid" value="1680186494699"/>
+                                    <setting name="eDMAn" value="0"/>
+                                    <setting name="eDMA_source" value="kDmaRequestMuxSai1Tx"/>
+                                    <setting name="enableTriggerPIT" value="false"/>
+                                    <setting name="init_channel_priority" value="false"/>
+                                    <struct name="edma_channel_Preemption">
+                                       <setting name="enableChannelPreemption" value="false"/>
+                                       <setting name="enablePreemptAbility" value="false"/>
+                                       <setting name="channelPriority" value="0"/>
+                                    </struct>
+                                    <setting name="enable_custom_name" value="false"/>
+                                 </struct>
+                                 <struct name="sai_edma_handle">
+                                    <setting name="enable_custom_name" value="false"/>
+                                    <struct name="placement">
+                                       <setting name="section" value="cacheable"/>
+                                       <setting name="zeroInitialize" value="false"/>
+                                       <setting name="align" value="32"/>
+                                    </struct>
+                                    <setting name="init_callback" value="true"/>
+                                    <setting name="callback_fcn" value="fun_edma_callback"/>
+                                    <setting name="user_data" value="p_sai_data"/>
+                                 </struct>
+                              </struct>
+                           </struct>
+                        </struct>
+                     </config_set>
+                  </instance>
+                  <instance name="DMA0" uuid="37128afd-b26b-4f87-abef-38a8abf4b307" type="edma" type_id="edma_46976c94302ab714c0d335f519487c8a" mode="basic" peripheral="DMA0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="fsl_edma">
+                        <struct name="common_settings">
+                           <setting name="enableMinorLoopMapping" value="true"/>
+                           <setting name="enableContinuousLinkMode" value="true"/>
+                           <setting name="enableHaltOnError" value="true"/>
+                           <setting name="ERCA" value="fixedPriority"/>
+                           <setting name="enableDebugMode" value="false"/>
+                        </struct>
+                        <array name="dma_table">
+                           <struct name="0"/>
+                        </array>
+                        <array name="edma_channels"/>
+                        <struct name="errInterruptConfig">
+                           <setting name="enableErrInterrupt" value="false"/>
+                           <struct name="errorInterrupt">
+                              <setting name="IRQn" value="DMA_ERROR_IRQn"/>
+                              <setting name="enable_interrrupt" value="enabled"/>
+                              <setting name="enable_priority" value="false"/>
+                              <setting name="priority" value="0"/>
+                              <setting name="enable_custom_name" value="false"/>
+                           </struct>
+                        </struct>
                      </config_set>
                   </instance>
                </instances>
