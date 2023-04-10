@@ -2,3 +2,5 @@
 *.o
 *.d
 *.su
+
+sdcard_fatfs_freertos/Debug/

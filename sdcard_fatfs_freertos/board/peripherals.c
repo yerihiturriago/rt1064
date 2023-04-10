@@ -279,7 +279,7 @@ instance:
                 - 14: 'false'
                 - 15: 'false'
           - fifo:
-            - fifoWatermarkM: '16'
+            - fifoWatermarkM: '31'
             - fifoCombine: 'kSAI_FifoCombineDisabled'
             - fifoPacking: 'kSAI_FifoPackingDisabled'
             - fifoContinueOneError: 'false'
@@ -338,7 +338,7 @@ sai_transceiver_t SAI1_Tx_config = {
     .dataMaskedWord = 0x0U
   },
   .fifo = {
-    .fifoWatermark = 16U,
+    .fifoWatermark = 31U,
     .fifoCombine = kSAI_FifoCombineDisabled,
     .fifoPacking = kSAI_FifoPackingDisabled,
     .fifoContinueOneError = false

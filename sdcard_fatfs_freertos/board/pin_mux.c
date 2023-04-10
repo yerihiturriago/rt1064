@@ -63,6 +63,7 @@ BOARD_InitPins:
   - {pin_num: D11, peripheral: SAI1, signal: sai_tx_sync, pin_signal: GPIO_B1_03, identifier: I2S_LCLK}
   - {pin_num: E11, peripheral: SAI1, signal: sai_rx_bclk, pin_signal: GPIO_B0_15}
   - {pin_num: E10, peripheral: SAI1, signal: sai_rx_sync, pin_signal: GPIO_B0_14}
+  - {pin_num: C10, peripheral: SAI1, signal: sai_tx_data1, pin_signal: GPIO_B0_12}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 
@@ -88,6 +89,7 @@ void BOARD_InitPins(void) {
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_09_GPIO1_IO09, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_12_LPUART1_TX, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_13_LPUART1_RX, 0U); 
+  IOMUXC_SetPinMux(IOMUXC_GPIO_B0_12_SAI1_TX_DATA01, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_B0_14_SAI1_RX_SYNC, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_B0_15_SAI1_RX_BCLK, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_B1_01_SAI1_TX_DATA00, 0U); 

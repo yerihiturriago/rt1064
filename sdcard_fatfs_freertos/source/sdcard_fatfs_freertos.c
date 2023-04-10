@@ -26,6 +26,7 @@
 #include "fsl_flexio_i2s_edma.h"
 #include "peripherals.h"
 
+
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -112,27 +113,30 @@ void SEMC_SDRAMReadWrite32Bit(void);
 
 //__DATA(RAM4) unsigned char myBuffer[1024];
 __DATA(RAM4) int sdram_data[100];
-uint8_t s_buffer[2][32];
+#define BUFFER_HALF_SIZE 32*100
+#define STCD_ADDR(address) (edma_tcd_t *)(((uint32_t)(address) + 32UL) & ~0x1FU)
+int16_t s_buffer[BUFFER_HALF_SIZE*2];
 
 void * p_sai_data;
 
-sai_transfer_t xfer[2U] = {
+sai_transfer_t xfer[1] = {
     {
-        .data     = s_buffer[0],
-        .dataSize = 320,
-    },
-    {
-        .data     = s_buffer[1],
-        .dataSize = 320,
-    },
+        .data     = (uint8_t*)&s_buffer[0],
+        .dataSize = BUFFER_HALF_SIZE*2,
+    }
 };
 
 void fun_edma_callback(I2S_Type *base, sai_edma_handle_t *handle, status_t status, void *userData)
 {
-	printf("sai callback\r\n");
-
+//	printf("sai callback. %d\r\n", ((edma_handle_t*)handle->dmaHandle)->channel);
 
 }
+
+void fun_edma_halfTransferCallback(struct _edma_handle *handle, void *userData, bool transferDone, uint32_t tcds)
+{
+//	printf("sai half t. callback: transferDone %d\r\n", transferDone);
+}
+
 /*******************************************************************************
  * Code
  ******************************************************************************/
@@ -213,17 +217,14 @@ int main(void)
     printf("ram data[0] = %d, [256000] = %d\r\n", sdram_data[0], sdram_data[255999]);
 
     p_sai_data = (void*)sdram_data;
-//    PRINTF("\r\nsai start.\r\n");
 
-    printf("sai transfer. dataSize %% bytesPerFrame = %d, bytesPerFrame = %d, dataSize = %d, count = %d\r\n",
-    		(int)SAI1_SAI_Tx_eDMA_Handle.transferSize % (SAI1_SAI_Tx_eDMA_Handle.bytesPerFrame*SAI1_SAI_Tx_eDMA_Handle.count),
-    		SAI1_SAI_Tx_eDMA_Handle.bytesPerFrame,
-			100,
-			SAI1_SAI_Tx_eDMA_Handle.count
-			);
-    int r = SAI_TransferSendLoopEDMA(SAI1_PERIPHERAL, &SAI1_SAI_Tx_eDMA_Handle, &xfer[0], 2);
-//    int r = SAI_TransferSendEDMA(SAI1_PERIPHERAL, &SAI1_SAI_Tx_eDMA_Handle, &xfer);
-    printf("sai transfer. r = %d\r\n", r);
+    uint16_t ii = 0;
+    for(int i = 0; i<BUFFER_HALF_SIZE;i++, ii++)
+    	s_buffer[i] = ii;
+    EDMA_SetCallback(SAI1_SAI_Tx_eDMA_Handle.dmaHandle, fun_edma_halfTransferCallback, NULL);
+    EDMA_TcdEnableInterrupts(STCD_ADDR(SAI1_SAI_Tx_eDMA_Handle.tcd), kEDMA_MajorInterruptEnable | kEDMA_HalfInterruptEnable);
+    int r = SAI_TransferSendLoopEDMA(SAI1_PERIPHERAL, &SAI1_SAI_Tx_eDMA_Handle, &xfer[0], 1);
+    while(1);
 
     return 0;
 

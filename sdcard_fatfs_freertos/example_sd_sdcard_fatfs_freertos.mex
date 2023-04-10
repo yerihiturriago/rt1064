@@ -114,6 +114,7 @@
                   </pin>
                   <pin peripheral="SAI1" signal="sai_rx_bclk" pin_num="E11" pin_signal="GPIO_B0_15"/>
                   <pin peripheral="SAI1" signal="sai_rx_sync" pin_num="E10" pin_signal="GPIO_B0_14"/>
+                  <pin peripheral="SAI1" signal="sai_tx_data1" pin_num="C10" pin_signal="GPIO_B0_12"/>
                </pins>
             </function>
          </functions_list>
@@ -672,7 +673,7 @@
                                     </struct>
                                  </struct>
                                  <struct name="fifo">
-                                    <setting name="fifoWatermarkM" value="16"/>
+                                    <setting name="fifoWatermarkM" value="31"/>
                                     <setting name="fifoCombine" value="kSAI_FifoCombineDisabled"/>
                                     <setting name="fifoPacking" value="kSAI_FifoPackingDisabled"/>
                                     <setting name="fifoContinueOneError" value="false"/>

@@ -1,7 +1,0 @@
-D:\Personal projects\Drum project\Desarrollo\RT1064\code\MIMXRT1064_Project_UART\drivers/fsl_common_arm.h:210:20:_SDK_AtomicLocalClearAndSet4Byte	48	static
-D:\Personal projects\Drum project\Desarrollo\RT1064\code\MIMXRT1064_Project_UART\drivers/fsl_clock.h:1497:20:CLOCK_ControlGate	32	static
-D:\Personal projects\Drum project\Desarrollo\RT1064\code\MIMXRT1064_Project_UART\drivers/fsl_clock.h:1514:20:CLOCK_EnableClock	16	static
-D:\Personal projects\Drum project\Desarrollo\RT1064\code\MIMXRT1064_Project_UART\drivers/fsl_iomuxc.h:1272:20:IOMUXC_SetPinMux	24	static
-D:\Personal projects\Drum project\Desarrollo\RT1064\code\MIMXRT1064_Project_UART\drivers/fsl_iomuxc.h:1304:20:IOMUXC_SetPinConfig	24	static
-../board/pin_mux.c:30:6:BOARD_InitBootPins	8	static
-../board/pin_mux.c:51:6:BOARD_InitPins	24	static

@@ -156,6 +156,11 @@ void BOARD_InitBootPins(void);
 #define BOARD_LCDIF_D10_PERIPHERAL                                          SAI1   /*!< Peripheral name */
 #define BOARD_LCDIF_D10_SIGNAL                                       sai_rx_sync   /*!< Signal name */
 
+/* GPIO_B0_12 (coord C10), LCDIF_D8/BT_CFG[8] */
+/* Routed pin properties */
+#define BOARD_LCDIF_D8_PERIPHERAL                                           SAI1   /*!< Peripheral name */
+#define BOARD_LCDIF_D8_SIGNAL                                       sai_tx_data1   /*!< Signal name */
+
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
  *
