@@ -7,7 +7,6 @@
  */
 
 #include "fsl_edma.h"
-#include "fsl_debug_console.h"
 #if defined FSL_FEATURE_MEMORY_HAS_ADDRESS_OFFSET && FSL_FEATURE_MEMORY_HAS_ADDRESS_OFFSET
 #include "fsl_memory.h"
 #endif
@@ -1011,7 +1010,6 @@ void EDMA_PrepareTransferConfig(edma_transfer_config_t *config,
     assert(destAddr != NULL);
     assert((srcWidth != 0U) && (srcWidth <= 32U) && ((srcWidth & (srcWidth - 1U)) == 0U));
     assert((destWidth != 0U) && (destWidth <= 32U) && ((destWidth & (destWidth - 1U)) == 0U));
-    PRINTF("driver: (transferBytes %% bytesEachRequest) = %d\r\n", (transferBytes % bytesEachRequest));
     assert((transferBytes % bytesEachRequest) == 0U);
     assert((((uint32_t)(uint32_t *)srcAddr) % srcWidth) == 0U);
     assert((((uint32_t)(uint32_t *)destAddr) % destWidth) == 0U);

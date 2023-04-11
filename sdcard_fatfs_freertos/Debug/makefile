@@ -11,6 +11,7 @@ RM := rm -rf
 -include xip/subdir.mk
 -include utilities/subdir.mk
 -include startup/subdir.mk
+-include source/testing/subdir.mk
 -include source/subdir.mk
 -include sdmmc/template/usdhc/subdir.mk
 -include sdmmc/src/subdir.mk

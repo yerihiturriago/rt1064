@@ -34,6 +34,7 @@ sdmmc/osa \
 sdmmc/src \
 sdmmc/template/usdhc \
 source \
+source/testing \
 startup \
 utilities \
 xip \
