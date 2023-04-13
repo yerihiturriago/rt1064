@@ -24,6 +24,8 @@
 #include <cr_section_macros.h>
 #include "fsl_common.h"
 #include "fsl_semc.h"
+#include "fsl_sai_edma.h"
+#include "peripherals.h"
 
 /*******************************************************************************
  * Definitions
@@ -45,6 +47,7 @@
 #define SEMC_EXAMPLE_DATALEN    (0x1000U)
 #define SEMC_EXAMPLE_WRITETIMES (1000U)
 #define EXAMPLE_SEMC_START_ADDRESS (0x80000000U)
+#define STCD_ADDR(address) (edma_tcd_t *)(((uint32_t)(address) + 32UL) & ~0x1FU)
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
@@ -105,6 +108,12 @@ TaskHandle_t fileAccessTaskHandle1;
 TaskHandle_t fileAccessTaskHandle2;
 
 __DATA(RAM4) int16_t ramBuffer[48000];
+sai_transfer_t xfer[1] = {
+    {
+        .data     = (uint8_t*)&ramBuffer[0],
+        .dataSize = 48000,
+    }
+};
 /*******************************************************************************
  * Code
  ******************************************************************************/
@@ -164,6 +173,21 @@ static void CardDetectTask(void *pvParameters)
     vTaskSuspend(NULL);
 }
 
+
+
+
+void fun_edma_callback(I2S_Type *base, sai_edma_handle_t *handle, status_t status, void *userData)
+{
+//	printf("sai callback. %d\r\n", ((edma_handle_t*)handle->dmaHandle)->channel);
+
+}
+
+void fun_edma_halfTransferCallback(struct _edma_handle *handle, void *userData, bool transferDone, uint32_t tcds)
+{
+//	printf("sai half t. callback: transferDone %d\r\n", transferDone);
+}
+
+
 /*!
  * @brief Main function
  */
@@ -174,12 +198,23 @@ int main(void)
     BOARD_BootClockRUN();
     BOARD_InitDebugConsole();
     BOARD_InitSEMC();
+    BOARD_InitPeripherals();
 
 
     PRINTF("\r\nSDCARD fatfs freertos example.\r\n");
 
     ramBuffer[47999] = 55;
-    printf("vallue = %d\r\n", ramBuffer[47999]);
+    printf("value = %d\r\n", ramBuffer[47999]);
+    printf("sai module is added\r\n");
+
+    for(int i = 0; i < 48000; i++)
+    	ramBuffer[i] = i;
+
+    EDMA_SetCallback(SAI1_SAI_Tx_eDMA_Handle.dmaHandle, fun_edma_halfTransferCallback, NULL);
+    EDMA_TcdEnableInterrupts(STCD_ADDR(SAI1_SAI_Tx_eDMA_Handle.tcd), kEDMA_MajorInterruptEnable | kEDMA_HalfInterruptEnable);
+    int r = SAI_TransferSendLoopEDMA(SAI1_PERIPHERAL, &SAI1_SAI_Tx_eDMA_Handle, &xfer[0], 1);
+    printf("sai send loop%d\r\n", r);
+
 
     if (pdPASS != xTaskCreate(FileAccessTask1, "FileAccessTask1", ACCESSFILE_TASK_STACK_SIZE, NULL,
                               ACCESSFILE_TASK_PRIORITY, &fileAccessTaskHandle1))
