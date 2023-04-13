@@ -1,5 +1,7 @@
 #ifndef _FFCONF_H_
 #define _FFCONF_H_
+#include "FreeRTOS.h"
+#include "semphr.h"
 
 /*---------------------------------------------------------------------------/
 /  FatFs Functional Configurations
@@ -11,13 +13,6 @@
 / MSDK adaptation configuration
 /---------------------------------------------------------------------------*/
 #define SD_DISK_ENABLE
-/* Available options are:
-/      RAM_DISK_ENABLE
-/      USB_DISK_ENABLE
-/      SD_DISK_ENABLE
-/      MMC_DISK_ENABLE
-/      SDSPI_DISK_ENABLE
-/      NAND_DISK_ENABLE */
 
 /*---------------------------------------------------------------------------/
 / Function Configurations
@@ -71,10 +66,10 @@
 /* This option switches f_forward() function. (0:Disable or 1:Enable) */
 
 
-#define FF_USE_STRFUNC	0
+#define FF_USE_STRFUNC	1
 #define FF_PRINT_LLI	0
 #define FF_PRINT_FLOAT	0
-#define FF_STRF_ENCODE	0
+#define FF_STRF_ENCODE	3
 /* FF_USE_STRFUNC switches string functions, f_gets(), f_putc(), f_puts() and
 /  f_printf().
 /
@@ -181,7 +176,7 @@
 / Drive/Volume Configurations
 /---------------------------------------------------------------------------*/
 
-#define FF_VOLUMES		5
+#define FF_VOLUMES		3
 /* Number of volumes (logical drives) to be used. (1-10) */
 
 
@@ -290,13 +285,10 @@
 /      lock control is independent of re-entrancy. */
 
 
-#define FF_FS_REENTRANT 0
-#define FF_FS_TIMEOUT   1000
-#if FF_FS_REENTRANT
-#include "FreeRTOS.h"
-#include "semphr.h"
-#define FF_SYNC_t       SemaphoreHandle_t
-#endif
+/* #include <somertos.h>	// O/S definitions */
+#define FF_FS_REENTRANT	1
+#define FF_FS_TIMEOUT	1000
+#define FF_SYNC_t		SemaphoreHandle_t
 /* The option FF_FS_REENTRANT switches the re-entrancy (thread safe) of the FatFs
 /  module itself. Note that regardless of this option, file access to different
 /  volume is always re-entrant and volume control functions, f_mount(), f_mkfs()

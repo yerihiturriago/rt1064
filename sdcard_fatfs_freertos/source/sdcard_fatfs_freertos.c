@@ -5,36 +5,34 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include <stdio.h>
-#include <string.h>
-#include "fsl_sd.h"
-#include "fsl_debug_console.h"
-#include "ff.h"
-#include "diskio.h"
-#include "fsl_sd_disk.h"
-#include "FreeRTOS.h"
-#include "semphr.h"
-#include "task.h"
-#include "limits.h"
-#include "pin_mux.h"
-#include "clock_config.h"
-#include "board.h"
-#include "sdmmc_config.h"
-#include <cr_section_macros.h>
-#include "fsl_common.h"
-#include "fsl_semc.h"
-#include "fsl_flexio_i2s_edma.h"
-#include "peripherals.h"
-#include "fsl_os_abstraction.h"
+//#include <stdio.h>
+//#include <string.h>
+//#include "fsl_sd.h"
+//#include "fsl_debug_console.h"
+//#include "ff.h"
+//#include "diskio.h"
+//#include "fsl_sd_disk.h"
+//#include "FreeRTOS.h"
+//#include "semphr.h"
+//#include "task.h"
+//#include "limits.h"
+//#include "pin_mux.h"
+//#include "clock_config.h"
+//#include "board.h"
+//#include "sdmmc_config.h"
+//
+//#include <cr_section_macros.h>
+//#include "fsl_common.h"
+//#include "fsl_semc.h"
+//#include "fsl_sai_edma.h"
+//#include "peripherals.h"
 #include "global.h"
 
 
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
-#define DEMO_TASK_GET_SEM_BLOCK_TICKS 1U
-#define DEMO_TASK_ACCESS_SDCARD_TIMES 2U
-/*! @brief Task stack size. */
+
 
 
 #define EXAMPLE_SEMC_CLK_FREQ      CLOCK_GetFreq(kCLOCK_SemcClk)
@@ -42,7 +40,6 @@
 #define SEMC_EXAMPLE_WRITETIMES (1000U)
 #define EXAMPLE_SEMC_START_ADDRESS (0x80000000U)
 
-status_t BOARD_InitSEMC(void);
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
@@ -50,20 +47,38 @@ void BOARD_PowerOffSDCARD(void);
 void BOARD_PowerOnSDCARD(void);
 
 
+
+/*!
+ * @brief call back function for SD card detect.
+ *
+ * @param isInserted  true,  indicate the card is insert.
+ *                    false, indicate the card is remove.
+ * @param userData
+ */
+static void SDCARD_DetectCallBack(bool isInserted, void *userData);
+
+/*!
+ * @brief make filesystem.
+ */
+status_t BOARD_InitSEMC(void);
+
 /*******************************************************************************
  * Variables
  ******************************************************************************/
 
 
-
-
-void * p_sai_data = NULL;
-
-
+static const uint8_t s_buffer1[] = {'T', 'A', 'S', 'K', '1', '\r', '\n'};
+static const uint8_t s_buffer2[] = {'T', 'A', 'S', 'K', '2', '\r', '\n'};
+/*! @brief SD card detect flag  */
+/*! @brief Card semaphore  */
+static SemaphoreHandle_t s_CardDetectSemaphore = NULL;
+/*! @brief file access task handler */
 
 /*******************************************************************************
  * Code
  ******************************************************************************/
+
+
 
 
 
@@ -77,24 +92,22 @@ int main(void)
     BOARD_BootClockRUN();
     BOARD_InitDebugConsole();
     BOARD_InitSEMC();
-    BOARD_InitBootPeripherals();
+    BOARD_InitPeripherals();
 
 
-    PRINTF("\r\nSDCARD fatfs freertos, sdram, flexio i2s example.\r\n");
+    PRINTF("\r\nSDCARD fatfs freertos example.\r\n");
 
-    test();
+    for(int i = 0; i < 48000; i++)
+    	ramBuffer[i] = i;
 
 
-
-    /* Start the tasks and timer running. */
+    sai_os_init();
+    sd_os_init();
+    test_fileSystem();
     vTaskStartScheduler();
+    while(1);
 
-    /* Scheduler should never reach this point. */
-    while (true)
-    {
-    }
 }
-
 
 
 
@@ -138,7 +151,3 @@ status_t BOARD_InitSEMC(void)
     sdramconfig.refreshBurstLen        = 1;
     return SEMC_ConfigureSDRAM(SEMC, kSEMC_SDRAM_CS0, &sdramconfig, clockFrq);
 }
-
-
-
-

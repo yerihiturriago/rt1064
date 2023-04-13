@@ -1,8 +1,18 @@
 
 
 
+
+
 #include "sai_os.h"
 
+
+__DATA(RAM4) int16_t ramBuffer[48000];
+sai_transfer_t xfer[1] = {
+    {
+        .data     = (uint8_t*)&ramBuffer[0],
+        .dataSize = 48000,
+    }
+};
 
 
 void sai_os_init(void)
@@ -24,4 +34,7 @@ void fun_edma_halfTransferCallback(struct _edma_handle *handle, void *userData, 
 {
 //	printf("sai half t. callback: transferDone %d\r\n", transferDone);
 }
+
+
+
 

@@ -37,7 +37,7 @@ extern "C" {
  */
 void BOARD_InitBootPins(void);
 
-#define BOARD_INITPINS_IOMUXC_GPR_GPR26_GPIO_MUX1_GPIO_SEL_MASK 0x0220U /*!< GPIO1 and GPIO6 share same IO MUX function, GPIO_MUX1 selects one GPIO function: affected bits mask */
+#define BOARD_INITPINS_IOMUXC_GPR_GPR26_GPIO_MUX1_GPIO_SEL_MASK 0x20U /*!< GPIO1 and GPIO6 share same IO MUX function, GPIO_MUX1 selects one GPIO function: affected bits mask */
 #define BOARD_INITPINS_IOMUXC_GPR_GPR27_GPIO_MUX2_GPIO_SEL_MASK 0x10000000U /*!< GPIO2 and GPIO7 share same IO MUX function, GPIO_MUX2 selects one GPIO function: affected bits mask */
 
 /* GPIO_AD_B0_05 (coord G14), CAN_STBY/BOOT_MODE[1]/Flash_RST/U12[8] */
@@ -117,49 +117,20 @@ void BOARD_InitBootPins(void);
 #define BOARD_SD0_VSELECT_PERIPHERAL                                      USDHC1   /*!< Peripheral name */
 #define BOARD_SD0_VSELECT_SIGNAL                                   usdhc_vselect   /*!< Signal name */
 
-/* GPIO_AD_B0_09 (coord F14), LED_F14 */
+/* GPIO_B1_01 (coord B11), LCDIF_D13 */
 /* Routed pin properties */
-#define BOARD_LED_F14_PERIPHERAL                                           GPIO1   /*!< Peripheral name */
-#define BOARD_LED_F14_SIGNAL                                             gpio_io   /*!< Signal name */
-#define BOARD_LED_F14_CHANNEL                                                 9U   /*!< Signal channel */
+#define BOARD_LCDIF_D13_PERIPHERAL                                          SAI1   /*!< Peripheral name */
+#define BOARD_LCDIF_D13_SIGNAL                                      sai_tx_data0   /*!< Signal name */
 
-/* Symbols to be used with GPIO driver */
-#define BOARD_LED_F14_GPIO                                                 GPIO1   /*!< GPIO peripheral base pointer */
-#define BOARD_LED_F14_GPIO_PIN                                                9U   /*!< GPIO pin number */
-#define BOARD_LED_F14_GPIO_PIN_MASK                                   (1U << 9U)   /*!< GPIO pin mask */
-#define BOARD_LED_F14_PORT                                                 GPIO1   /*!< PORT peripheral base pointer */
-#define BOARD_LED_F14_PIN                                                     9U   /*!< PORT pin number */
-#define BOARD_LED_F14_PIN_MASK                                        (1U << 9U)   /*!< PORT pin mask */
-
-/* GPIO_B1_01 (coord B11), I2S_DIN */
+/* GPIO_B1_02 (coord C11), LCDIF_D14 */
 /* Routed pin properties */
-#define BOARD_I2S_DIN_PERIPHERAL                                            SAI1   /*!< Peripheral name */
-#define BOARD_I2S_DIN_SIGNAL                                        sai_tx_data0   /*!< Signal name */
+#define BOARD_LCDIF_D14_PERIPHERAL                                          SAI1   /*!< Peripheral name */
+#define BOARD_LCDIF_D14_SIGNAL                                       sai_tx_bclk   /*!< Signal name */
 
-/* GPIO_B1_02 (coord C11), I2S_BCLK */
+/* GPIO_B1_03 (coord D11), LCDIF_D15 */
 /* Routed pin properties */
-#define BOARD_I2S_BCLK_PERIPHERAL                                           SAI1   /*!< Peripheral name */
-#define BOARD_I2S_BCLK_SIGNAL                                        sai_tx_bclk   /*!< Signal name */
-
-/* GPIO_B1_03 (coord D11), I2S_LCLK */
-/* Routed pin properties */
-#define BOARD_I2S_LCLK_PERIPHERAL                                           SAI1   /*!< Peripheral name */
-#define BOARD_I2S_LCLK_SIGNAL                                        sai_tx_sync   /*!< Signal name */
-
-/* GPIO_B0_15 (coord E11), LCDIF_D11/BT_CFG[11] */
-/* Routed pin properties */
-#define BOARD_LCDIF_D11_PERIPHERAL                                          SAI1   /*!< Peripheral name */
-#define BOARD_LCDIF_D11_SIGNAL                                       sai_rx_bclk   /*!< Signal name */
-
-/* GPIO_B0_14 (coord E10), LCDIF_D10/BT_CFG[10] */
-/* Routed pin properties */
-#define BOARD_LCDIF_D10_PERIPHERAL                                          SAI1   /*!< Peripheral name */
-#define BOARD_LCDIF_D10_SIGNAL                                       sai_rx_sync   /*!< Signal name */
-
-/* GPIO_B0_12 (coord C10), LCDIF_D8/BT_CFG[8] */
-/* Routed pin properties */
-#define BOARD_LCDIF_D8_PERIPHERAL                                           SAI1   /*!< Peripheral name */
-#define BOARD_LCDIF_D8_SIGNAL                                       sai_tx_data1   /*!< Signal name */
+#define BOARD_LCDIF_D15_PERIPHERAL                                          SAI1   /*!< Peripheral name */
+#define BOARD_LCDIF_D15_SIGNAL                                       sai_tx_sync   /*!< Signal name */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.

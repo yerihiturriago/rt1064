@@ -28,9 +28,6 @@ extern "C" {
 #define DMA0_DMA_BASEADDR DMA0
 /* Associated DMAMUX device that is used for muxing of requests. */
 #define DMA0_DMAMUX_BASEADDR DMAMUX
-/* BOARD_InitPeripherals defines for SEMC */
-/* Definition of peripheral ID. */
-#define SEMC_PERIPHERAL SEMC
 /* Definition of peripheral ID */
 #define SAI1_PERIPHERAL SAI1
 /* Bit clock source frequency used for calculating the bit clock divider in the TxSetBitClockRate function. */
@@ -49,6 +46,9 @@ extern "C" {
 #define SAI1_TX_DMAMUX_BASEADDR DMAMUX
 /* Used DMA device. */
 #define SAI1_TX_DMA_BASEADDR DMA0
+/* BOARD_InitPeripherals defines for SEMC */
+/* Definition of peripheral ID. */
+#define SEMC_PERIPHERAL SEMC
 
 /***********************************************************************************************************************
  * Global variables
@@ -56,14 +56,7 @@ extern "C" {
 extern const edma_config_t DMA0_config;
 extern sai_transceiver_t SAI1_Tx_config;
 extern edma_handle_t SAI1_TX_Handle;
-extern void * p_sai_data;
 extern sai_edma_handle_t SAI1_SAI_Tx_eDMA_Handle;
-
-/***********************************************************************************************************************
- * Callback functions
- **********************************************************************************************************************/
-/* SAI transfer Tx callback function for the SAI1 component (init. function BOARD_InitPeripherals)*/
-extern void fun_edma_callback(I2S_Type *base, sai_edma_handle_t *handle, status_t status, void *userData);
 
 /***********************************************************************************************************************
  * Initialization functions

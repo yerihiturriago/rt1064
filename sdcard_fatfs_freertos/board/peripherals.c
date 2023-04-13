@@ -6,15 +6,15 @@
 /* clang-format off */
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Peripherals v11.0
+product: Peripherals v12.0
 processor: MIMXRT1064xxxxA
 package_id: MIMXRT1064DVL6A
 mcu_data: ksdk2_0
-processor_version: 12.0.1
+processor_version: 13.0.2
 board: MIMXRT1064-EVK
 functionalGroups:
 - name: BOARD_InitPeripherals
-  UUID: 36b9abcc-efb9-4d25-b3af-e5df8d7d3844
+  UUID: 9c26c193-63df-444a-9eeb-45c3b55218bf
   called_from_default_init: true
   selectedCore: core0
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
@@ -124,6 +124,175 @@ static void NVIC_init(void) {
 } */
 
 /***********************************************************************************************************************
+ * SAI1 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'SAI1'
+- type: 'sai'
+- mode: 'edma'
+- custom_name_enabled: 'false'
+- type_id: 'sai_d277a9f96e6a702cd0cbe3311dc8aff9'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'SAI1'
+- config_sets:
+  - fsl_sai:
+    - usage: 'playback'
+    - signal_config:
+      - 0:
+        - sourceTx: 'Tx'
+      - 1:
+        - sourceTx: 'Tx'
+    - syncSwapI: []
+    - bclkTxSetting: []
+    - syncTxSetting: []
+    - whole:
+      - tx_group:
+        - sai_transceiver:
+          - bitClock:
+            - modeM: 'master'
+            - bitClockSource: 'kSAI_BclkSourceBusclk'
+            - bitClockSourceFreq: 'ClocksTool_DefaultInit'
+            - bclkPolarityM: 'kSAI_PolarityActiveLow'
+            - bclkInputDelayM: 'false'
+          - frameSync:
+            - modeM: 'master'
+            - frameSyncWidthM: '16'
+            - frameSyncPolarityM: 'kSAI_PolarityActiveLow'
+            - frameSyncEarlyM: 'true'
+            - frameSyncGenerateOnDemandM: 'false'
+          - sampleRate_Hz: 'kSAI_SampleRate48KHz'
+          - channelMask: 'kSAI_Channel0Mask'
+          - serialData:
+            - dataMode: 'kSAI_DataPinStateTriState'
+            - differentFirstWord: 'false'
+            - sameDataWordLengthM: 'kSAI_WordWidth16bits'
+            - dataOrder: 'kSAI_DataMSB'
+            - dataFirstBitShiftedM: '16'
+            - dataWordNumM: '2'
+            - dataMasked_config:
+              - dataMasked_L:
+                - 0: 'false'
+                - 1: 'false'
+                - 2: 'false'
+                - 3: 'false'
+                - 4: 'false'
+                - 5: 'false'
+                - 6: 'false'
+                - 7: 'false'
+                - 8: 'false'
+                - 9: 'false'
+                - 10: 'false'
+                - 11: 'false'
+                - 12: 'false'
+                - 13: 'false'
+                - 14: 'false'
+                - 15: 'false'
+              - dataMasked_H:
+                - 0: 'false'
+                - 1: 'false'
+                - 2: 'false'
+                - 3: 'false'
+                - 4: 'false'
+                - 5: 'false'
+                - 6: 'false'
+                - 7: 'false'
+                - 8: 'false'
+                - 9: 'false'
+                - 10: 'false'
+                - 11: 'false'
+                - 12: 'false'
+                - 13: 'false'
+                - 14: 'false'
+                - 15: 'false'
+          - fifo:
+            - fifoWatermarkM: '16'
+            - fifoCombine: 'kSAI_FifoCombineDisabled'
+            - fifoPacking: 'kSAI_FifoPackingDisabled'
+            - fifoContinueOneError: 'false'
+        - edma_group:
+          - enable_edma_channel: 'true'
+          - edma_channel:
+            - uid: '1681340540130'
+            - eDMAn: '0'
+            - eDMA_source: 'kDmaRequestMuxSai1Tx'
+            - enableTriggerPIT: 'false'
+            - init_channel_priority: 'false'
+            - edma_channel_Preemption:
+              - enableChannelPreemption: 'false'
+              - enablePreemptAbility: 'false'
+              - channelPriority: '0'
+            - enable_custom_name: 'false'
+          - sai_edma_handle:
+            - enable_custom_name: 'false'
+            - placement:
+              - section: 'cacheable'
+              - zeroInitialize: 'false'
+              - align: '32'
+            - init_callback: 'false'
+            - callback_fcn: ''
+            - user_data: ''
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+/* SAI1 Tx configuration */
+sai_transceiver_t SAI1_Tx_config = {
+  .masterSlave = kSAI_Master,
+  .bitClock = {
+    .bclkSrcSwap = false,
+    .bclkSource = kSAI_BclkSourceBusclk,
+    .bclkPolarity = kSAI_PolarityActiveLow,
+    .bclkInputDelay = false
+  },
+  .frameSync = {
+    .frameSyncWidth = 16U,
+    .frameSyncPolarity = kSAI_PolarityActiveLow,
+    .frameSyncEarly = true,
+    .frameSyncGenerateOnDemand = false
+  },
+  .syncMode = kSAI_ModeAsync,
+  .channelMask = kSAI_Channel0Mask,
+  .startChannel = 0U,
+  .endChannel = 0U,
+  .channelNums = 1U,
+  .serialData = {
+    .dataMode = kSAI_DataPinStateTriState,
+    .dataWord0Length = (uint8_t)kSAI_WordWidth16bits,
+    .dataWordNLength = (uint8_t)kSAI_WordWidth16bits,
+    .dataWordLength = (uint8_t)kSAI_WordWidth16bits,
+    .dataOrder = kSAI_DataMSB,
+    .dataFirstBitShifted = 16U,
+    .dataWordNum = 2U,
+    .dataMaskedWord = 0x0U
+  },
+  .fifo = {
+    .fifoWatermark = 16U,
+    .fifoCombine = kSAI_FifoCombineDisabled,
+    .fifoPacking = kSAI_FifoPackingDisabled,
+    .fifoContinueOneError = false
+  }
+};
+edma_handle_t SAI1_TX_Handle;
+sai_edma_handle_t SAI1_SAI_Tx_eDMA_Handle;
+
+static void SAI1_init(void) {
+  /* Set the source kDmaRequestMuxSai1Tx request in the DMAMUX */
+  DMAMUX_SetSource(SAI1_TX_DMAMUX_BASEADDR, SAI1_TX_DMA_CHANNEL, SAI1_TX_DMA_REQUEST);
+  /* Enable the channel 0 in the DMAMUX */
+  DMAMUX_EnableChannel(SAI1_TX_DMAMUX_BASEADDR, SAI1_TX_DMA_CHANNEL);
+  /* Create the eDMA SAI1_TX_Handle handle */
+  EDMA_CreateHandle(&SAI1_TX_Handle, SAI1_TX_DMA_BASEADDR, SAI1_TX_DMA_CHANNEL);
+  /* Initialize SAI clock gate */
+  SAI_Init(SAI1_PERIPHERAL);
+  /* Create the SAI Tx eDMA handle */
+  SAI_TransferTxCreateHandleEDMA(SAI1_PERIPHERAL, &SAI1_SAI_Tx_eDMA_Handle, NULL, NULL, &SAI1_TX_Handle);
+  /* Configures SAI Tx sub-module functionality */
+  SAI_TransferTxSetConfigEDMA(SAI1_PERIPHERAL, &SAI1_SAI_Tx_eDMA_Handle, &SAI1_Tx_config);
+  /* Set up SAI Tx bitclock rate by calculation of divider. */
+  SAI_TxSetBitClockRate(SAI1_PERIPHERAL, SAI1_TX_BCLK_SOURCE_CLOCK_HZ, SAI1_TX_SAMPLE_RATE, SAI1_TX_WORD_WIDTH, SAI1_TX_WORDS_PER_FRAME);
+}
+
+/***********************************************************************************************************************
  * SEMC initialization code
  **********************************************************************************************************************/
 /* clang-format off */
@@ -141,7 +310,7 @@ instance:
     - enableDCD: 'true'
     - clockConfig:
       - clockSource: 'kSEMC_ClkSrcPeri'
-      - clockSourceFreq: 'BOARD_BootClockRUN'
+      - clockSourceFreq: 'ClocksTool_DefaultInit'
     - semc_config_t:
       - dqsMode: 'kSEMC_Loopbackdqspad'
       - cmdTimeoutCycles: '0'
@@ -194,175 +363,6 @@ instance:
 /* Empty initialization function (commented out)
 static void SEMC_init(void) {
 } */
-
-/***********************************************************************************************************************
- * SAI1 initialization code
- **********************************************************************************************************************/
-/* clang-format off */
-/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
-instance:
-- name: 'SAI1'
-- type: 'sai'
-- mode: 'edma'
-- custom_name_enabled: 'false'
-- type_id: 'sai_d277a9f96e6a702cd0cbe3311dc8aff9'
-- functional_group: 'BOARD_InitPeripherals'
-- peripheral: 'SAI1'
-- config_sets:
-  - fsl_sai:
-    - usage: 'playback'
-    - signal_config:
-      - 0:
-        - sourceTx: 'Tx'
-      - 1:
-        - sourceTx: 'Tx'
-    - syncSwapI: []
-    - bclkTxSetting: []
-    - syncTxSetting: []
-    - whole:
-      - tx_group:
-        - sai_transceiver:
-          - bitClock:
-            - modeM: 'master'
-            - bitClockSource: 'kSAI_BclkSourceBusclk'
-            - bitClockSourceFreq: 'BOARD_BootClockRUN'
-            - bclkPolarityM: 'kSAI_PolarityActiveLow'
-            - bclkInputDelayM: 'false'
-          - frameSync:
-            - modeM: 'master'
-            - frameSyncWidthM: '16'
-            - frameSyncPolarityM: 'kSAI_PolarityActiveLow'
-            - frameSyncEarlyM: 'false'
-            - frameSyncGenerateOnDemandM: 'false'
-          - sampleRate_Hz: 'kSAI_SampleRate48KHz'
-          - channelMask: 'kSAI_Channel0Mask'
-          - serialData:
-            - dataMode: 'kSAI_DataPinStateTriState'
-            - differentFirstWord: 'false'
-            - sameDataWordLengthM: 'kSAI_WordWidth16bits'
-            - dataOrder: 'kSAI_DataMSB'
-            - dataFirstBitShiftedM: '16'
-            - dataWordNumM: '2'
-            - dataMasked_config:
-              - dataMasked_L:
-                - 0: 'false'
-                - 1: 'false'
-                - 2: 'false'
-                - 3: 'false'
-                - 4: 'false'
-                - 5: 'false'
-                - 6: 'false'
-                - 7: 'false'
-                - 8: 'false'
-                - 9: 'false'
-                - 10: 'false'
-                - 11: 'false'
-                - 12: 'false'
-                - 13: 'false'
-                - 14: 'false'
-                - 15: 'false'
-              - dataMasked_H:
-                - 0: 'false'
-                - 1: 'false'
-                - 2: 'false'
-                - 3: 'false'
-                - 4: 'false'
-                - 5: 'false'
-                - 6: 'false'
-                - 7: 'false'
-                - 8: 'false'
-                - 9: 'false'
-                - 10: 'false'
-                - 11: 'false'
-                - 12: 'false'
-                - 13: 'false'
-                - 14: 'false'
-                - 15: 'false'
-          - fifo:
-            - fifoWatermarkM: '31'
-            - fifoCombine: 'kSAI_FifoCombineDisabled'
-            - fifoPacking: 'kSAI_FifoPackingDisabled'
-            - fifoContinueOneError: 'false'
-        - edma_group:
-          - enable_edma_channel: 'true'
-          - edma_channel:
-            - uid: '1680186494699'
-            - eDMAn: '0'
-            - eDMA_source: 'kDmaRequestMuxSai1Tx'
-            - enableTriggerPIT: 'false'
-            - init_channel_priority: 'false'
-            - edma_channel_Preemption:
-              - enableChannelPreemption: 'false'
-              - enablePreemptAbility: 'false'
-              - channelPriority: '0'
-            - enable_custom_name: 'false'
-          - sai_edma_handle:
-            - enable_custom_name: 'false'
-            - placement:
-              - section: 'cacheable'
-              - zeroInitialize: 'false'
-              - align: '32'
-            - init_callback: 'true'
-            - callback_fcn: 'fun_edma_callback'
-            - user_data: 'p_sai_data'
- * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
-/* clang-format on */
-/* SAI1 Tx configuration */
-sai_transceiver_t SAI1_Tx_config = {
-  .masterSlave = kSAI_Master,
-  .bitClock = {
-    .bclkSrcSwap = false,
-    .bclkSource = kSAI_BclkSourceBusclk,
-    .bclkPolarity = kSAI_PolarityActiveLow,
-    .bclkInputDelay = false
-  },
-  .frameSync = {
-    .frameSyncWidth = 16U,
-    .frameSyncPolarity = kSAI_PolarityActiveLow,
-    .frameSyncEarly = false,
-    .frameSyncGenerateOnDemand = false
-  },
-  .syncMode = kSAI_ModeAsync,
-  .channelMask = kSAI_Channel0Mask,
-  .startChannel = 0U,
-  .endChannel = 0U,
-  .channelNums = 1U,
-  .serialData = {
-    .dataMode = kSAI_DataPinStateTriState,
-    .dataWord0Length = (uint8_t)kSAI_WordWidth16bits,
-    .dataWordNLength = (uint8_t)kSAI_WordWidth16bits,
-    .dataWordLength = (uint8_t)kSAI_WordWidth16bits,
-    .dataOrder = kSAI_DataMSB,
-    .dataFirstBitShifted = 16U,
-    .dataWordNum = 2U,
-    .dataMaskedWord = 0x0U
-  },
-  .fifo = {
-    .fifoWatermark = 31U,
-    .fifoCombine = kSAI_FifoCombineDisabled,
-    .fifoPacking = kSAI_FifoPackingDisabled,
-    .fifoContinueOneError = false
-  }
-};
-edma_handle_t SAI1_TX_Handle;
-sai_edma_handle_t SAI1_SAI_Tx_eDMA_Handle;
-
-static void SAI1_init(void) {
-  /* Set the source kDmaRequestMuxSai1Tx request in the DMAMUX */
-  DMAMUX_SetSource(SAI1_TX_DMAMUX_BASEADDR, SAI1_TX_DMA_CHANNEL, SAI1_TX_DMA_REQUEST);
-  /* Enable the channel 0 in the DMAMUX */
-  DMAMUX_EnableChannel(SAI1_TX_DMAMUX_BASEADDR, SAI1_TX_DMA_CHANNEL);
-  /* Create the eDMA SAI1_TX_Handle handle */
-  EDMA_CreateHandle(&SAI1_TX_Handle, SAI1_TX_DMA_BASEADDR, SAI1_TX_DMA_CHANNEL);
-  /* Initialize SAI clock gate */
-  SAI_Init(SAI1_PERIPHERAL);
-  /* Create the SAI Tx eDMA handle */
-  SAI_TransferTxCreateHandleEDMA(SAI1_PERIPHERAL, &SAI1_SAI_Tx_eDMA_Handle, fun_edma_callback, p_sai_data, &SAI1_TX_Handle);
-  /* Configures SAI Tx sub-module functionality */
-  SAI_TransferTxSetConfigEDMA(SAI1_PERIPHERAL, &SAI1_SAI_Tx_eDMA_Handle, &SAI1_Tx_config);
-  /* Set up SAI Tx bitclock rate by calculation of divider. */
-  SAI_TxSetBitClockRate(SAI1_PERIPHERAL, SAI1_TX_BCLK_SOURCE_CLOCK_HZ, SAI1_TX_SAMPLE_RATE, SAI1_TX_WORD_WIDTH, SAI1_TX_WORDS_PER_FRAME);
-}
 
 /***********************************************************************************************************************
  * Initialization functions

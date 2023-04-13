@@ -1,28 +1,37 @@
 
 
 
-
 #include "sd_os.h"
 
 
+
 static SemaphoreHandle_t s_CardDetectSemaphore = NULL;
+
+volatile bool s_cardInserted     = false;
+volatile bool s_cardInsertStatus = false;
+FATFS g_fileSystem;
+
+FIL g_fileObject1;  /* File object */
+TaskHandle_t fileAccessTaskHandle1;
+
 
 
 void sd_os_init(void)
 {
 
-    if (pdPASS != xTaskCreate(sd_os_cardDetectTask, "CardDetectTask", CARDDETECT_TASK_STACK_SIZE, NULL, CARDDETECT_TASK_PRIORITY, NULL))
+    if (pdPASS !=
+        xTaskCreate(CardDetectTask, "CardDetectTask", CARDDETECT_TASK_STACK_SIZE, NULL, CARDDETECT_TASK_PRIORITY, NULL))
     {
-    	printf("fail task create: card detect task\r\n");
+    	printf("error creating card detect task\r\n");
         return;
     }
 }
 
-void sd_os_cardDetectTask(void *pvParameters)
+void CardDetectTask(void *pvParameters)
 {
     s_CardDetectSemaphore = xSemaphoreCreateBinary();
 
-    BOARD_SD_Config(&g_sd, SDCARD_DetectCallBack, BOARD_SDMMC_SD_HOST_IRQ_PRIORITY, NULL);
+    BOARD_SD_Config(&g_sd, sd_os_cardDetectTask, BOARD_SDMMC_SD_HOST_IRQ_PRIORITY, NULL);
 
     /* SD host init function */
     if (SD_HostInit(&g_sd) == kStatus_Success)
@@ -49,7 +58,6 @@ void sd_os_cardDetectTask(void *pvParameters)
                             continue;
                         }
                         xTaskNotifyGive(fileAccessTaskHandle1);
-//                        xTaskNotifyGive(fileAccessTaskHandle2);
                     }
                 }
 
@@ -66,12 +74,6 @@ void sd_os_cardDetectTask(void *pvParameters)
     }
 
     vTaskSuspend(NULL);
-}
-
-void SDCARD_DetectCallBack(bool isInserted, void *userData)
-{
-    s_cardInsertStatus = isInserted;
-    xSemaphoreGiveFromISR(s_CardDetectSemaphore, NULL);
 }
 
 
@@ -95,12 +97,18 @@ status_t sd_os_mountDrive(void)
         return kStatus_Fail;
     }
 #endif
+
+
+
     return kStatus_Success;
 }
 
 
-
-
+void sd_os_cardDetectTask(bool isInserted, void *userData)
+{
+    s_cardInsertStatus = isInserted;
+    xSemaphoreGiveFromISR(s_CardDetectSemaphore, NULL);
+}
 
 
 
