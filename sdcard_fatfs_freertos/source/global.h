@@ -25,6 +25,8 @@
 #include "sai_os.h"
 #include "sd_os.h"
 #include "test.h"
+#include "start.h"
+#include "wav.h"
 
 
 

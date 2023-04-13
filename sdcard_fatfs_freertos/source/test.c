@@ -8,6 +8,8 @@
 static TaskHandle_t fileAccessTaskHandle2;
 static FIL g_fileObject2;  /* File object */
 
+
+
 void test_fileSystem(void)
 {
 
@@ -155,6 +157,62 @@ void test_FileAccessTask2(void *pvParameters)
 }
 
 
+void test_playBullet(void)
+{
+    if (pdPASS != xTaskCreate(test_thrdPlayBullet, "FileAccessTask1", 1024, NULL,
+                              ACCESSFILE_TASK_PRIORITY, NULL))
+    {
+        return;
+    }
+}
+
+static void test_thrdPlayBullet(void* arg)
+{
+	uint8_t halfTransferCopy;
+	uint8_t r = 0;
+	uint32_t lseek = 0;
+	wav_header_t wav;
+	uint32_t fileSize;
+	uint32_t numReadBytes = 0;
+	uint32_t bytesToRead;
+
+
+
+	if((r = f_open(&g_fileObject1, _T("bullet.wav"), FA_READ)))
+		printf("error opening bullet.wav\r\n");
+	f_read(&g_fileObject1, &wav, 44, &lseek);
+	wav_printHeader(&wav);
+	fileSize = wav.fileSize;
+//	f_read(&g_fileObject1,
+//			g_saiTransferDone ? &ramBuffer[SAI_BUFFER_HALF_SIZE]:&ramBuffer[0],
+//					SAI_BUFFER_HALF_SIZE_BYTES,
+//					&numReadBytes);
+//	lseek += SAI_BUFFER_HALF_SIZE_BYTES;
+	halfTransferCopy = g_saiTransferDone;
+
+	while(lseek < fileSize)
+	{
+		if(g_saiTransferDone != halfTransferCopy)
+		{
+//			printf("lseek = %d\r\n", lseek);
+			halfTransferCopy = g_saiTransferDone;
+			if(fileSize - lseek >= SAI_BUFFER_HALF_SIZE_BYTES)
+				bytesToRead = SAI_BUFFER_HALF_SIZE_BYTES;
+			else
+				bytesToRead = fileSize - lseek;
+
+			f_read(&g_fileObject1,
+					g_saiTransferDone ? &ramBuffer[SAI_BUFFER_HALF_SIZE]:&ramBuffer[0],
+//					g_saiTransferDone ? &ramBuffer[0]:&ramBuffer[SAI_BUFFER_HALF_SIZE],
+					SAI_BUFFER_HALF_SIZE_BYTES,
+					&numReadBytes);
+			lseek += bytesToRead;
+			printf("lseek = %d\r\n", lseek);
+		}
+	}
+
+	vTaskSuspend(NULL);
+}
 
 
 

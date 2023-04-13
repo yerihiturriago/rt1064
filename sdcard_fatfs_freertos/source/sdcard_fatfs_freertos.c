@@ -100,10 +100,9 @@ int main(void)
     for(int i = 0; i < 48000; i++)
     	ramBuffer[i] = i;
 
-
-    sai_os_init();
-    sd_os_init();
-    test_fileSystem();
+    start_initModules();
+//    test_fileSystem();
+    start_main();
     vTaskStartScheduler();
     while(1);
 

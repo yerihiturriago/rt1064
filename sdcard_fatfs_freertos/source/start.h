@@ -1,15 +1,15 @@
 
 
 
-#ifndef START_H
-#define START_H
+#ifndef START_H_
+#define START_H_
 
 #include "global.h"
 
 
-void start_initilizeModules(void);
-void start_initSdModule(void);
-void start_initSaiModule(void);
+
+void start_initModules(void);
+void start_main(void);
 
 
 #endif

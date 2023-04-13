@@ -8,9 +8,16 @@
 
 #include "global.h"
 
+#define SAI_NUMBER_CHANNELS				2 //stereo
+#define SAI_BYTES_PER_SAMPLES  			2
+#define SAI_MONO_SAMPLES_IN_1SECOND		48000
+#define SAI_BUFFER_SIZE		   			SAI_MONO_SAMPLES_IN_1SECOND*SAI_NUMBER_CHANNELS //96000 = number_channels * 48k samples
+#define SAI_BUFFER_SIZE_BYTES  			SAI_BUFFER_SIZE*SAI_BYTES_PER_SAMPLES
+#define SAI_BUFFER_HALF_SIZE 			SAI_BUFFER_SIZE/2
+#define SAI_BUFFER_HALF_SIZE_BYTES 		SAI_BUFFER_SIZE_BYTES/2
 
-
-extern __DATA(RAM4) int16_t ramBuffer[48000];
+extern bool g_saiTransferDone;
+extern __DATA(RAM4) int16_t ramBuffer[SAI_BUFFER_SIZE];
 extern sai_transfer_t xfer[1];
 
 

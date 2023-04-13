@@ -20,7 +20,7 @@ void sd_os_init(void)
 {
 
     if (pdPASS !=
-        xTaskCreate(CardDetectTask, "CardDetectTask", CARDDETECT_TASK_STACK_SIZE, NULL, CARDDETECT_TASK_PRIORITY, NULL))
+        xTaskCreate(CardDetectTask, "CardDetectTask", 2048, NULL, CARDDETECT_TASK_PRIORITY, NULL))
     {
     	printf("error creating card detect task\r\n");
         return;
@@ -83,6 +83,7 @@ status_t sd_os_mountDrive(void)
     const TCHAR driverNumberBuffer[3U] = {SDDISK + '0', ':', '/'};
     BYTE work[FF_MAX_SS];
 
+    printf("mounting SD...\r\n");
     if (f_mount(&g_fileSystem, driverNumberBuffer, 0U))
     {
         PRINTF("Mount volume failed.\r\n");

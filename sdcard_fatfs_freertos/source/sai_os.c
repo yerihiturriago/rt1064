@@ -5,12 +5,12 @@
 
 #include "sai_os.h"
 
-
-__DATA(RAM4) int16_t ramBuffer[48000];
+bool g_saiTransferDone = true;
+__DATA(RAM4) int16_t ramBuffer[SAI_BUFFER_SIZE];
 sai_transfer_t xfer[1] = {
     {
         .data     = (uint8_t*)&ramBuffer[0],
-        .dataSize = 48000,
+        .dataSize = SAI_BUFFER_SIZE_BYTES,
     }
 };
 
@@ -32,6 +32,9 @@ void fun_edma_callback(I2S_Type *base, sai_edma_handle_t *handle, status_t statu
 
 void fun_edma_halfTransferCallback(struct _edma_handle *handle, void *userData, bool transferDone, uint32_t tcds)
 {
+
+	memset(transferDone ? &ramBuffer[SAI_BUFFER_HALF_SIZE]:&ramBuffer[0], 0, SAI_BUFFER_HALF_SIZE_BYTES);
+	g_saiTransferDone = transferDone;
 //	printf("sai half t. callback: transferDone %d\r\n", transferDone);
 }
 

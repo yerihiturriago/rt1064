@@ -9,7 +9,9 @@ C_SRCS += \
 ../source/sd_os.c \
 ../source/sdcard_fatfs_freertos.c \
 ../source/semihost_hardfault.c \
-../source/test.c 
+../source/start.c \
+../source/test.c \
+../source/wav.c 
 
 C_DEPS += \
 ./source/global.d \
@@ -17,7 +19,9 @@ C_DEPS += \
 ./source/sd_os.d \
 ./source/sdcard_fatfs_freertos.d \
 ./source/semihost_hardfault.d \
-./source/test.d 
+./source/start.d \
+./source/test.d \
+./source/wav.d 
 
 OBJS += \
 ./source/global.o \
@@ -25,7 +29,9 @@ OBJS += \
 ./source/sd_os.o \
 ./source/sdcard_fatfs_freertos.o \
 ./source/semihost_hardfault.o \
-./source/test.o 
+./source/start.o \
+./source/test.o \
+./source/wav.o 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -47,7 +53,7 @@ source/sdcard_fatfs_freertos.o: ../source/sdcard_fatfs_freertos.c source/subdir.
 clean: clean-source
 
 clean-source:
-	-$(RM) ./source/global.d ./source/global.o ./source/sai_os.d ./source/sai_os.o ./source/sd_os.d ./source/sd_os.o ./source/sdcard_fatfs_freertos.d ./source/sdcard_fatfs_freertos.o ./source/semihost_hardfault.d ./source/semihost_hardfault.o ./source/test.d ./source/test.o
+	-$(RM) ./source/global.d ./source/global.o ./source/sai_os.d ./source/sai_os.o ./source/sd_os.d ./source/sd_os.o ./source/sdcard_fatfs_freertos.d ./source/sdcard_fatfs_freertos.o ./source/semihost_hardfault.d ./source/semihost_hardfault.o ./source/start.d ./source/start.o ./source/test.d ./source/test.o ./source/wav.d ./source/wav.o
 
 .PHONY: clean-source
 
