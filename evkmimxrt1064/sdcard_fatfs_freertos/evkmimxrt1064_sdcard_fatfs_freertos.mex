@@ -183,7 +183,7 @@
                   <clock_output id="SAI3_CLK_ROOT.outFreq" value="1080/17 MHz" locked="false" accuracy=""/>
                   <clock_output id="SAI3_MCLK1.outFreq" value="1080/17 MHz" locked="false" accuracy=""/>
                   <clock_output id="SAI3_MCLK3.outFreq" value="30 MHz" locked="false" accuracy=""/>
-                  <clock_output id="SEMC_CLK_ROOT.outFreq" value="75 MHz" locked="false" accuracy=""/>
+                  <clock_output id="SEMC_CLK_ROOT.outFreq" value="100 MHz" locked="false" accuracy=""/>
                   <clock_output id="SPDIF0_CLK_ROOT.outFreq" value="30 MHz" locked="false" accuracy=""/>
                   <clock_output id="TRACE_CLK_ROOT.outFreq" value="132 MHz" locked="false" accuracy=""/>
                   <clock_output id="UART_CLK_ROOT.outFreq" value="80 MHz" locked="false" accuracy=""/>
@@ -201,7 +201,7 @@
                   <setting id="CCM.LCDIF_PRED.scale" value="2" locked="true"/>
                   <setting id="CCM.LPSPI_PODF.scale" value="5" locked="true"/>
                   <setting id="CCM.PERCLK_PODF.scale" value="2" locked="true"/>
-                  <setting id="CCM.SEMC_PODF.scale" value="8" locked="false"/>
+                  <setting id="CCM.SEMC_PODF.scale" value="6" locked="true"/>
                   <setting id="CCM.TRACE_CLK_SEL.sel" value="CCM_ANALOG.PLL2_MAIN_CLK" locked="false"/>
                   <setting id="CCM.TRACE_PODF.scale" value="4" locked="true"/>
                   <setting id="CCM_ANALOG.PLL1_BYPASS.sel" value="CCM_ANALOG.PLL1" locked="false"/>
@@ -542,6 +542,16 @@
             </dependency>
             <dependency resourceType="SWComponent" resourceId="platform.drivers.edma" description="Unsupported version of the EDMA Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. Project might not compile correctly." problem_level="1" source="Peripherals">
                <feature name="version" evaluation="greaterOrEqual">
+                  <data type="Version">2.4.0</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.semc" description="SEMC Driver not found in the toolchain/IDE project. Project will not compile!" problem_level="2" source="Peripherals">
+               <feature name="enabled" evaluation="equal">
+                  <data type="Boolean">true</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.semc" description="Unsupported version of the SEMC Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. Project might not compile correctly." problem_level="1" source="Peripherals">
+               <feature name="version" evaluation="greaterOrEqual">
                   <data type="Version">2.3.0</data>
                </feature>
             </dependency>
@@ -552,6 +562,7 @@
          </generated_project_files>
          <peripherals_profile>
             <processor_version>13.0.2</processor_version>
+            <ignored_component_migration_offer/>
          </peripherals_profile>
          <functional_groups>
             <functional_group name="BOARD_InitPeripherals" uuid="9c26c193-63df-444a-9eeb-45c3b55218bf" called_from_default_init="true" id_prefix="" core="core0">
@@ -569,6 +580,16 @@
                      </feature>
                   </dependency>
                   <dependency resourceType="PeripheralUnifiedSignal" resourceId="SAI1.i2s_tfs" description="SAI1.TX SYNC pin needs to be routed" problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="routed" evaluation="equal">
+                        <data type="Boolean">true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="SAI1.i2s_rclk" description="SAI1.RX BCLK pin needs to be routed" problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="routed" evaluation="equal">
+                        <data type="Boolean">true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="SAI1.i2s_rfs" description="SAI1.RX SYNC pin needs to be routed" problem_level="1" source="Peripherals:BOARD_InitPeripherals">
                      <feature name="routed" evaluation="equal">
                         <data type="Boolean">true</data>
                      </feature>
@@ -699,7 +720,7 @@
                               <struct name="edma_group">
                                  <setting name="enable_edma_channel" value="true"/>
                                  <struct name="edma_channel">
-                                    <setting name="uid" value="1681339933416"/>
+                                    <setting name="uid" value="1681340540130"/>
                                     <setting name="eDMAn" value="0"/>
                                     <setting name="eDMA_source" value="kDmaRequestMuxSai1Tx"/>
                                     <setting name="enableTriggerPIT" value="false"/>
@@ -727,12 +748,13 @@
                         </struct>
                      </config_set>
                   </instance>
-                  <instance name="DMA0" uuid="5534d1e1-4d5b-4553-a3b7-d08cfc24fa97" type="edma" type_id="edma_6d0dd4e17e2f179c7d42d98767129ede" mode="basic" peripheral="DMA0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                  <instance name="DMA0" uuid="5534d1e1-4d5b-4553-a3b7-d08cfc24fa97" type="edma" type_id="edma_46976c94302ab714c0d335f519487c8a" mode="basic" peripheral="DMA0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="fsl_edma">
                         <struct name="common_settings">
+                           <setting name="enableMinorLoopMapping" value="true"/>
                            <setting name="enableContinuousLinkMode" value="true"/>
                            <setting name="enableHaltOnError" value="true"/>
-                           <setting name="enableRoundRobinArbitration" value="false"/>
+                           <setting name="ERCA" value="fixedPriority"/>
                            <setting name="enableDebugMode" value="false"/>
                         </struct>
                         <array name="dma_table">
@@ -749,6 +771,68 @@
                               <setting name="enable_custom_name" value="false"/>
                            </struct>
                         </struct>
+                     </config_set>
+                  </instance>
+                  <instance name="SEMC" uuid="3ea59e58-f68d-48cb-881f-e402160ea153" type="semc" type_id="semc_84a769c198c91c527e11dcec2f5b4b81" mode="general" peripheral="SEMC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="fsl_semc">
+                        <setting name="enableDCD" value="true"/>
+                        <struct name="clockConfig">
+                           <setting name="clockSource" value="kSEMC_ClkSrcPeri"/>
+                           <setting name="clockSourceFreq" value="ClocksTool_DefaultInit"/>
+                        </struct>
+                        <struct name="semc_config_t">
+                           <setting name="dqsMode" value="kSEMC_Loopbackdqspad"/>
+                           <setting name="cmdTimeoutCycles" value="0"/>
+                           <setting name="busTimeoutCycles" value="0"/>
+                           <struct name="queueWeight">
+                              <setting name="queueaEnable" value="false"/>
+                              <struct name="queueaWeight">
+                                 <setting name="structORvalue" value="structure"/>
+                                 <struct name="queueaConfig">
+                                    <setting name="qos" value="0"/>
+                                    <setting name="aging" value="0"/>
+                                    <setting name="slaveHitSwith" value="0"/>
+                                    <setting name="slaveHitNoswitch" value="0"/>
+                                 </struct>
+                              </struct>
+                              <setting name="queuebEnable" value="false"/>
+                              <struct name="queuebWeight">
+                                 <setting name="structORvalue" value="structure"/>
+                                 <struct name="queuebConfig">
+                                    <setting name="qos" value="0"/>
+                                    <setting name="aging" value="0"/>
+                                    <setting name="slaveHitSwith" value="0"/>
+                                    <setting name="weightPagehit" value="0"/>
+                                    <setting name="bankRotation" value="0"/>
+                                 </struct>
+                              </struct>
+                           </struct>
+                        </struct>
+                        <struct name="semc_sdram_config_t">
+                           <setting name="csxPinMux" value="kSEMC_MUXCSX0"/>
+                           <setting name="semcSdramCs" value="kSEMC_SDRAM_CS0"/>
+                           <setting name="address" value="0x80000000"/>
+                           <setting name="memsize_input" value="32MB"/>
+                           <setting name="portSize" value="kSEMC_PortSize16Bit"/>
+                           <setting name="burstLen" value="kSEMC_Sdram_BurstLen1"/>
+                           <setting name="columnAddrBitNum" value="kSEMC_SdramColunm_9bit"/>
+                           <setting name="casLatency" value="kSEMC_LatencyThree"/>
+                           <setting name="tPrecharge2Act_Ns" value="18"/>
+                           <setting name="tAct2ReadWrite_Ns" value="18"/>
+                           <setting name="tRefreshRecovery_Ns" value="127"/>
+                           <setting name="tWriteRecovery_Ns" value="12"/>
+                           <setting name="tCkeOff_Ns" value="42"/>
+                           <setting name="tAct2Prechage_Ns" value="42"/>
+                           <setting name="tSelfRefRecovery_Ns" value="67"/>
+                           <setting name="tRefresh2Refresh_Ns" value="60"/>
+                           <setting name="tAct2Act_Ns" value="60"/>
+                           <setting name="tPrescalePeriod_Ns" value="160"/>
+                           <setting name="tIdleTimeout_Ns" value="0"/>
+                           <setting name="refreshPeriod_nsPerRow" value="64"/>
+                           <setting name="refreshUrgThreshold" value="64"/>
+                           <setting name="refreshBurstLen" value="1"/>
+                        </struct>
+                        <array name="sdramArray"/>
                      </config_set>
                   </instance>
                </instances>

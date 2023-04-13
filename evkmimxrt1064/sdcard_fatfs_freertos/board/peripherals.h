@@ -46,6 +46,9 @@ extern "C" {
 #define SAI1_TX_DMAMUX_BASEADDR DMAMUX
 /* Used DMA device. */
 #define SAI1_TX_DMA_BASEADDR DMA0
+/* BOARD_InitPeripherals defines for SEMC */
+/* Definition of peripheral ID. */
+#define SEMC_PERIPHERAL SEMC
 
 /***********************************************************************************************************************
  * Global variables

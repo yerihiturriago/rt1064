@@ -63,15 +63,16 @@ instance:
 - type: 'edma'
 - mode: 'basic'
 - custom_name_enabled: 'false'
-- type_id: 'edma_6d0dd4e17e2f179c7d42d98767129ede'
+- type_id: 'edma_46976c94302ab714c0d335f519487c8a'
 - functional_group: 'BOARD_InitPeripherals'
 - peripheral: 'DMA0'
 - config_sets:
   - fsl_edma:
     - common_settings:
+      - enableMinorLoopMapping: 'true'
       - enableContinuousLinkMode: 'true'
       - enableHaltOnError: 'true'
-      - enableRoundRobinArbitration: 'false'
+      - ERCA: 'fixedPriority'
       - enableDebugMode: 'false'
     - dma_table:
       - 0: []
@@ -93,9 +94,10 @@ const edma_config_t DMA0_config = {
   .enableDebugMode = false
 };
 
-/* Empty initialization function (commented out)
 static void DMA0_init(void) {
-} */
+  /* DMA0 minor loop mapping */
+  EDMA_EnableMinorLoopMapping(DMA0_DMA_BASEADDR, true);
+}
 
 /***********************************************************************************************************************
  * NVIC initialization code
@@ -212,7 +214,7 @@ instance:
         - edma_group:
           - enable_edma_channel: 'true'
           - edma_channel:
-            - uid: '1681339933416'
+            - uid: '1681340540130'
             - eDMAn: '0'
             - eDMA_source: 'kDmaRequestMuxSai1Tx'
             - enableTriggerPIT: 'false'
@@ -291,6 +293,78 @@ static void SAI1_init(void) {
 }
 
 /***********************************************************************************************************************
+ * SEMC initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'SEMC'
+- type: 'semc'
+- mode: 'general'
+- custom_name_enabled: 'false'
+- type_id: 'semc_84a769c198c91c527e11dcec2f5b4b81'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'SEMC'
+- config_sets:
+  - fsl_semc:
+    - enableDCD: 'true'
+    - clockConfig:
+      - clockSource: 'kSEMC_ClkSrcPeri'
+      - clockSourceFreq: 'ClocksTool_DefaultInit'
+    - semc_config_t:
+      - dqsMode: 'kSEMC_Loopbackdqspad'
+      - cmdTimeoutCycles: '0'
+      - busTimeoutCycles: '0'
+      - queueWeight:
+        - queueaEnable: 'false'
+        - queueaWeight:
+          - structORvalue: 'structure'
+          - queueaConfig:
+            - qos: '0'
+            - aging: '0'
+            - slaveHitSwith: '0'
+            - slaveHitNoswitch: '0'
+        - queuebEnable: 'false'
+        - queuebWeight:
+          - structORvalue: 'structure'
+          - queuebConfig:
+            - qos: '0'
+            - aging: '0'
+            - slaveHitSwith: '0'
+            - weightPagehit: '0'
+            - bankRotation: '0'
+    - semc_sdram_config_t:
+      - csxPinMux: 'kSEMC_MUXCSX0'
+      - semcSdramCs: 'kSEMC_SDRAM_CS0'
+      - address: '0x80000000'
+      - memsize_input: '32MB'
+      - portSize: 'kSEMC_PortSize16Bit'
+      - burstLen: 'kSEMC_Sdram_BurstLen1'
+      - columnAddrBitNum: 'kSEMC_SdramColunm_9bit'
+      - casLatency: 'kSEMC_LatencyThree'
+      - tPrecharge2Act_Ns: '18'
+      - tAct2ReadWrite_Ns: '18'
+      - tRefreshRecovery_Ns: '127'
+      - tWriteRecovery_Ns: '12'
+      - tCkeOff_Ns: '42'
+      - tAct2Prechage_Ns: '42'
+      - tSelfRefRecovery_Ns: '67'
+      - tRefresh2Refresh_Ns: '60'
+      - tAct2Act_Ns: '60'
+      - tPrescalePeriod_Ns: '160'
+      - tIdleTimeout_Ns: '0'
+      - refreshPeriod_nsPerRow: '64'
+      - refreshUrgThreshold: '64'
+      - refreshBurstLen: '1'
+    - sdramArray: []
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+
+/* Empty initialization function (commented out)
+static void SEMC_init(void) {
+} */
+
+/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 void BOARD_InitPeripherals(void)
@@ -300,6 +374,7 @@ void BOARD_InitPeripherals(void)
   EDMA_Init(DMA0_DMA_BASEADDR, &DMA0_config);
 
   /* Initialize components */
+  DMA0_init();
   SAI1_init();
 }
 
