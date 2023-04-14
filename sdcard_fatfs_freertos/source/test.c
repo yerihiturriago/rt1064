@@ -190,7 +190,8 @@ static void test_thrdPlayBullet(void* arg)
 //	lseek += SAI_BUFFER_HALF_SIZE_BYTES;
 	halfTransferCopy = g_saiTransferDone;
 
-	while(lseek < fileSize)
+	while(1)
+//	while(lseek < fileSize)
 	{
 		if(g_saiTransferDone != halfTransferCopy)
 		{
@@ -209,6 +210,14 @@ static void test_thrdPlayBullet(void* arg)
 			lseek += bytesToRead;
 			printf("lseek = %d\r\n", lseek);
 		}
+//		if(lseek >= fileSize)
+//			break;
+		if(lseek >= fileSize)
+		{
+			lseek = 44;
+			f_lseek(&g_fileObject1, lseek);
+		}
+
 	}
 
 	vTaskSuspend(NULL);
