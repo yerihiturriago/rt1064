@@ -18,6 +18,7 @@
 
 extern bool g_saiTransferDone;
 extern __DATA(RAM4) int16_t ramBuffer[SAI_BUFFER_SIZE];
+extern __DATA(RAM4) int16_t filePlayBuffer[SAI_BUFFER_HALF_SIZE];
 extern sai_transfer_t xfer[1];
 
 

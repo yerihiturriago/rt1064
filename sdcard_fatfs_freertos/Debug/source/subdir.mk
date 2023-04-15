@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../source/audio.c \
 ../source/global.c \
 ../source/sai_os.c \
 ../source/sd_os.c \
@@ -14,6 +15,7 @@ C_SRCS += \
 ../source/wav.c 
 
 C_DEPS += \
+./source/audio.d \
 ./source/global.d \
 ./source/sai_os.d \
 ./source/sd_os.d \
@@ -24,6 +26,7 @@ C_DEPS += \
 ./source/wav.d 
 
 OBJS += \
+./source/audio.o \
 ./source/global.o \
 ./source/sai_os.o \
 ./source/sd_os.o \
@@ -53,7 +56,7 @@ source/sdcard_fatfs_freertos.o: ../source/sdcard_fatfs_freertos.c source/subdir.
 clean: clean-source
 
 clean-source:
-	-$(RM) ./source/global.d ./source/global.o ./source/sai_os.d ./source/sai_os.o ./source/sd_os.d ./source/sd_os.o ./source/sdcard_fatfs_freertos.d ./source/sdcard_fatfs_freertos.o ./source/semihost_hardfault.d ./source/semihost_hardfault.o ./source/start.d ./source/start.o ./source/test.d ./source/test.o ./source/wav.d ./source/wav.o
+	-$(RM) ./source/audio.d ./source/audio.o ./source/global.d ./source/global.o ./source/sai_os.d ./source/sai_os.o ./source/sd_os.d ./source/sd_os.o ./source/sdcard_fatfs_freertos.d ./source/sdcard_fatfs_freertos.o ./source/semihost_hardfault.d ./source/semihost_hardfault.o ./source/start.d ./source/start.o ./source/test.d ./source/test.o ./source/wav.d ./source/wav.o
 
 .PHONY: clean-source
 

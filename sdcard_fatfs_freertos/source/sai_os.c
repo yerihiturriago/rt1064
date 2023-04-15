@@ -7,6 +7,7 @@
 
 bool g_saiTransferDone = true;
 __DATA(RAM4) int16_t ramBuffer[SAI_BUFFER_SIZE];
+__DATA(RAM4) int16_t filePlayBuffer[SAI_BUFFER_HALF_SIZE];
 sai_transfer_t xfer[1] = {
     {
         .data     = (uint8_t*)&ramBuffer[0],
@@ -17,6 +18,7 @@ sai_transfer_t xfer[1] = {
 
 void sai_os_init(void)
 {
+    memset(ramBuffer, 0, sizeof(ramBuffer));
     EDMA_SetCallback(SAI1_SAI_Tx_eDMA_Handle.dmaHandle, fun_edma_halfTransferCallback, NULL);
     EDMA_TcdEnableInterrupts(STCD_ADDR(SAI1_SAI_Tx_eDMA_Handle.tcd), kEDMA_MajorInterruptEnable | kEDMA_HalfInterruptEnable);
     int r = SAI_TransferSendLoopEDMA(SAI1_PERIPHERAL, &SAI1_SAI_Tx_eDMA_Handle, &xfer[0], 1);

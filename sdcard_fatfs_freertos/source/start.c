@@ -6,7 +6,6 @@ static void start_mainThread(void* arg);
 
 void start_initModules(void)
 {
-
     sai_os_init();
     sd_os_init();
 
@@ -29,7 +28,9 @@ static void start_mainThread(void* arg)
 	xTaskNotifyWait(ULONG_MAX, ULONG_MAX, NULL, portMAX_DELAY);
 
 	printf("main thread working\r\n");
-	test_playBullet();
+//	test_playBullet();
+	audio_play("bullet.wav");
+
 //	while(1);
 	vTaskSuspend(NULL);
 }

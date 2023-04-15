@@ -183,15 +183,9 @@ static void test_thrdPlayBullet(void* arg)
 	f_read(&g_fileObject1, &wav, 44, &lseek);
 	wav_printHeader(&wav);
 	fileSize = wav.fileSize;
-//	f_read(&g_fileObject1,
-//			g_saiTransferDone ? &ramBuffer[SAI_BUFFER_HALF_SIZE]:&ramBuffer[0],
-//					SAI_BUFFER_HALF_SIZE_BYTES,
-//					&numReadBytes);
-//	lseek += SAI_BUFFER_HALF_SIZE_BYTES;
 	halfTransferCopy = g_saiTransferDone;
 
 	while(1)
-//	while(lseek < fileSize)
 	{
 		if(g_saiTransferDone != halfTransferCopy)
 		{
@@ -204,14 +198,11 @@ static void test_thrdPlayBullet(void* arg)
 
 			f_read(&g_fileObject1,
 					g_saiTransferDone ? &ramBuffer[SAI_BUFFER_HALF_SIZE]:&ramBuffer[0],
-//					g_saiTransferDone ? &ramBuffer[0]:&ramBuffer[SAI_BUFFER_HALF_SIZE],
 					SAI_BUFFER_HALF_SIZE_BYTES,
 					&numReadBytes);
 			lseek += bytesToRead;
 			printf("lseek = %d\r\n", lseek);
 		}
-//		if(lseek >= fileSize)
-//			break;
 		if(lseek >= fileSize)
 		{
 			lseek = 44;
@@ -223,5 +214,9 @@ static void test_thrdPlayBullet(void* arg)
 	vTaskSuspend(NULL);
 }
 
-
+void test_loadSawWave(void)
+{
+    for(int i = 0; i < SAI_BUFFER_SIZE; i++)
+    	ramBuffer[i] = i;
+}
 

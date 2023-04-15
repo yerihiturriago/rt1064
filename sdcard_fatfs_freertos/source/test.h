@@ -14,6 +14,8 @@ void test_fileSystem(void);
 void test_playBullet(void);
 static void test_thrdPlayBullet(void* arg);
 
+void test_loadSawWave(void);
+
 #endif
 
 

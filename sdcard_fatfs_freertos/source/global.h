@@ -27,6 +27,7 @@
 #include "test.h"
 #include "start.h"
 #include "wav.h"
+#include "audio.h"
 
 
 
