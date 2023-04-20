@@ -28,6 +28,8 @@
 #include "start.h"
 #include "wav.h"
 #include "audio.h"
+#include "pad.h"
+#include "file_os.h"
 
 
 

@@ -13,6 +13,7 @@ FATFS g_fileSystem;
 
 FIL g_fileObject1;  /* File object */
 TaskHandle_t fileAccessTaskHandle1;
+TaskHandle_t fileAccessForPad;
 
 
 

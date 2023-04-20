@@ -77,8 +77,8 @@ int main(void)
     PRINTF("\r\nSDCARD fatfs freertos example.\r\n");
 
 //    test_loadSawWave();
-
     start_initModules();
+//    test_loadInRam32MB();
 //    test_fileSystem();
     start_main();
     vTaskStartScheduler();

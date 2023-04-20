@@ -15,6 +15,8 @@ void test_playBullet(void);
 static void test_thrdPlayBullet(void* arg);
 
 void test_loadSawWave(void);
+void test_loadInRam32MB(void);
+static void test_thrdLoadInRam32MB(void* arg);
 
 #endif
 

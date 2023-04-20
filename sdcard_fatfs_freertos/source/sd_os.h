@@ -21,6 +21,7 @@
 
 
 extern TaskHandle_t fileAccessTaskHandle1;
+extern TaskHandle_t fileAccessForPad;
 extern sd_card_t g_sd;
 
 extern volatile bool s_cardInserted;

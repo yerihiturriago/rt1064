@@ -176,7 +176,7 @@ static void test_thrdPlayBullet(void* arg)
 	uint32_t numReadBytes = 0;
 	uint32_t bytesToRead;
 
-
+	printf("test thrd play bullet\r\n");
 
 	if((r = f_open(&g_fileObject1, _T("bullet.wav"), FA_READ)))
 		printf("error opening bullet.wav\r\n");
@@ -218,5 +218,27 @@ void test_loadSawWave(void)
 {
     for(int i = 0; i < SAI_BUFFER_SIZE; i++)
     	ramBuffer[i] = i;
+}
+
+void test_loadInRam32MB(void)
+{
+
+    if (pdPASS != xTaskCreate(test_thrdLoadInRam32MB, "test load in ram 32MB", 1024, NULL,
+                              ACCESSFILE_TASK_PRIORITY, NULL))
+    {
+        return;
+    }
+}
+
+static void test_thrdLoadInRam32MB(void* arg)
+{
+	printf("test load in ram 32MB\r\n");
+	uint32_t i;
+	for(i = 0; i < PAD_SIZE_16BIT*29; i++)
+	{
+		snareRam[i] = i;
+		printf("snareRam[%d] = %d\r\n", i, snareRam[i]);
+	}
+
 }
 
