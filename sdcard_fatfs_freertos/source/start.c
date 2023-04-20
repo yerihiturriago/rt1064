@@ -8,7 +8,6 @@ void start_initModules(void)
 {
     sai_os_init();
     sd_os_init();
-//    pad_loadDefaultPads();
 }
 
 void start_main(void)
@@ -33,6 +32,7 @@ static void start_mainThread(void* arg)
 //	audio_play("bullet.wav");
 
 	pad_loadDefaultPads();
+	pad_playNoThrd(0);
 //	while(1);
 	vTaskSuspend(NULL);
 }

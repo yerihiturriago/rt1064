@@ -23,7 +23,11 @@ extern int16_t chinaRam[PAD_SIZE_16BIT];
 
 
 void pad_loadDefaultPads(void);
-static void pad_thrdLoadDefaultPads(void* arg);
+//static void pad_thrdLoadDefaultPads(void* arg);
+void pad_playNoThrd(uint8_t padNum);
+
+
+
 
 
 
