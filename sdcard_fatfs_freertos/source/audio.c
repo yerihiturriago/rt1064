@@ -5,6 +5,11 @@
 
 uint8_t g_isPlayingAudio = false;
 
+audioEngine_t audioEngine = {
+	.mainBuffer = ramBuffer,
+	.i 			= 0,
+};
+
 
 void audio_play(const char* fileName)
 {
@@ -67,7 +72,42 @@ void audio_mixBuffer(int16_t* toMix, uint32_t startIndex, uint32_t length)
 }
 
 
+TaskHandle_t audio_getAudioThread(void)
+{
+	printf("audio get audio thread\r\n");
+	audioEngine.i >= 7 ? audioEngine.i = 0:audioEngine.i++;
+//	printf("task state = %d\r\n", eTaskGetState(audioEngine.thrds[audioEngine.i]));
+//	if(eTaskGetState(audioEngine.thrds[audioEngine.i]) < eSuspended)
+//		vTaskSuspend(audioEngine.thrds[audioEngine.i]);
+	return audioEngine.thrds[audioEngine.i];
+}
 
+void audio_padPlay(uint8_t padNum, uint8_t power)
+{
+	reqPad_t* reqPad = (reqPad_t*)pvPortMalloc(sizeof(reqPad_t));
+	reqPad->padNum = padNum;
+	reqPad->power  = power;
+	TaskHandle_t handle = audio_getAudioThread();
+	printf("audio pad play\r\n");
+
+    if (pdPASS !=
+        xTaskCreate(audio_thrdPadPlay, "audio thrd pad play", 1024, reqPad, ACCESSFILE_TASK_PRIORITY, &handle))
+    {
+    	printf("error creating load default pads task\r\n");
+        return;
+    }
+}
+
+
+
+static void audio_thrdPadPlay(void* arg)
+{
+	reqPad_t reqPad = *((reqPad_t*)arg);
+	vPortFree(arg);
+//	printf("padNum = %d, power = %d\r\n", reqPad.padNum, reqPad.power);
+	printf("thread.i = %d\r\n", audioEngine.i);
+	vTaskSuspend(NULL);
+}
 
 
 

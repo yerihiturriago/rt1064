@@ -10,6 +10,11 @@
 
 #define PAD_SIZE_16BIT 524288
 
+typedef struct st_requestPAD{
+	uint8_t padNum;
+	uint8_t power;
+}reqPad_t;
+
 
 extern int16_t snareRam[PAD_SIZE_16BIT];
 extern int16_t kickRam[PAD_SIZE_16BIT];
@@ -25,8 +30,6 @@ extern int16_t chinaRam[PAD_SIZE_16BIT];
 void pad_loadDefaultPads(void);
 //static void pad_thrdLoadDefaultPads(void* arg);
 void pad_playNoThrd(uint8_t padNum);
-
-
 
 
 

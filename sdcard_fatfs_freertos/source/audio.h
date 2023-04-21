@@ -9,11 +9,22 @@
 #include "global.h"
 
 
+#define AUDIO_THRD_NUM	8
+
+typedef struct st_audioEngine{
+	int16_t* mainBuffer;
+	uint8_t i;
+	TaskHandle_t thrds[8];
+
+}audioEngine_t;
+
+
 void audio_play(const char* fileName);
 static void audio_playThrd(void* arg);
 void audio_mixBuffer(int16_t* toMix, uint32_t startIndex, uint32_t length);
-
-
+void audio_padPlay(uint8_t padNum, uint8_t power);
+static void audio_thrdPadPlay(void* arg);
+TaskHandle_t audio_getAudioThread(void);
 
 
 #endif

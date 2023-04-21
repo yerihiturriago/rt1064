@@ -32,7 +32,10 @@ static void start_mainThread(void* arg)
 //	audio_play("bullet.wav");
 
 	pad_loadDefaultPads();
-	pad_playNoThrd(0);
+	vTaskDelay(200);
+//	audio_initEngine();
+//	pad_playNoThrd(0);
+	audio_padPlay(10, 124);
 //	while(1);
 	vTaskSuspend(NULL);
 }

@@ -82,8 +82,6 @@ void pad_playNoThrd(uint8_t padNum)
 }
 
 
-
-
 //static void pad_thrdLoadDefaultPads(void* arg)
 //{
 //	printf("pad thrd load default pads\r\n");
