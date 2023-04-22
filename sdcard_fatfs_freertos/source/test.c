@@ -89,7 +89,7 @@ void test_FileAccessTask1(void *pvParameters)
         }
     }
 
-    vTaskSuspend(NULL);
+    vTaskDelete(NULL);
 }
 
 
@@ -211,7 +211,7 @@ static void test_thrdPlayBullet(void* arg)
 
 	}
 
-	vTaskSuspend(NULL);
+	vTaskDelete(NULL);
 }
 
 void test_loadSawWave(void)

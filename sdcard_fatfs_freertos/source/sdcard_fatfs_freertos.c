@@ -80,6 +80,19 @@ int main(void)
     start_initModules();
 //    test_loadInRam32MB();
 //    test_fileSystem();
+//    audio_initEngine();
+//    xTaskCreate(audio_thrdPadPlay, "audio thrd pad play", 1024,
+//    					(void*)0,
+//    					ACCESSFILE_TASK_PRIORITY,
+//    					&(audioEngine.thrds[0]));
+//    xTaskCreate(audio_thrdPadPlay, "audio thrd pad play", 1024,
+//        					(void*)1,
+//        					ACCESSFILE_TASK_PRIORITY,
+//        					&(audioEngine.thrds[1]));
+//    xTaskCreate(audio_thrdPadPlay, "audio thrd pad play", 1024,
+//        					(void*)2,
+//        					ACCESSFILE_TASK_PRIORITY,
+//        					&(audioEngine.thrds[2]));
     start_main();
     vTaskStartScheduler();
     while(1);

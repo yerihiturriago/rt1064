@@ -74,7 +74,7 @@ void CardDetectTask(void *pvParameters)
         PRINTF("\r\nSD host init fail\r\n");
     }
 
-    vTaskSuspend(NULL);
+    vTaskDelete(NULL);
 }
 
 

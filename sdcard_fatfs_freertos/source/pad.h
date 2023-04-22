@@ -11,8 +11,9 @@
 #define PAD_SIZE_16BIT 524288
 
 typedef struct st_requestPAD{
-	uint8_t padNum;
-	uint8_t power;
+	uint8_t padNum;	//pad number
+	uint8_t power;	//power or volume
+	uint8_t i;		//audio thread index
 }reqPad_t;
 
 

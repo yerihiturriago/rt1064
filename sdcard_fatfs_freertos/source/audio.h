@@ -17,14 +17,16 @@ typedef struct st_audioEngine{
 	TaskHandle_t thrds[8];
 
 }audioEngine_t;
+extern audioEngine_t audioEngine;
 
 
 void audio_play(const char* fileName);
 static void audio_playThrd(void* arg);
 void audio_mixBuffer(int16_t* toMix, uint32_t startIndex, uint32_t length);
 void audio_padPlay(uint8_t padNum, uint8_t power);
-static void audio_thrdPadPlay(void* arg);
-TaskHandle_t audio_getAudioThread(void);
+void audio_thrdPadPlay(void* arg);
+TaskHandle_t audio_getNextThread(void);
+void audio_initEngine(void);
 
 
 #endif
