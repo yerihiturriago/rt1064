@@ -15,6 +15,7 @@ typedef struct st_audioEngine{
 	int16_t* mainBuffer;
 	uint8_t i;
 	TaskHandle_t thrds[8];
+	QueueHandle_t thrdQ;
 
 }audioEngine_t;
 extern audioEngine_t audioEngine;

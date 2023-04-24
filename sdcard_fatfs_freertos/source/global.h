@@ -30,7 +30,7 @@
 #include "audio.h"
 #include "pad.h"
 #include "file_os.h"
-
+#include "logApp.h"
 
 
 

@@ -7,6 +7,7 @@ C_SRCS += \
 ../source/audio.c \
 ../source/file_os.c \
 ../source/global.c \
+../source/logApp.c \
 ../source/pad.c \
 ../source/sai_os.c \
 ../source/sd_os.c \
@@ -20,6 +21,7 @@ C_DEPS += \
 ./source/audio.d \
 ./source/file_os.d \
 ./source/global.d \
+./source/logApp.d \
 ./source/pad.d \
 ./source/sai_os.d \
 ./source/sd_os.d \
@@ -33,6 +35,7 @@ OBJS += \
 ./source/audio.o \
 ./source/file_os.o \
 ./source/global.o \
+./source/logApp.o \
 ./source/pad.o \
 ./source/sai_os.o \
 ./source/sd_os.o \
@@ -62,7 +65,7 @@ source/sdcard_fatfs_freertos.o: ../source/sdcard_fatfs_freertos.c source/subdir.
 clean: clean-source
 
 clean-source:
-	-$(RM) ./source/audio.d ./source/audio.o ./source/file_os.d ./source/file_os.o ./source/global.d ./source/global.o ./source/pad.d ./source/pad.o ./source/sai_os.d ./source/sai_os.o ./source/sd_os.d ./source/sd_os.o ./source/sdcard_fatfs_freertos.d ./source/sdcard_fatfs_freertos.o ./source/semihost_hardfault.d ./source/semihost_hardfault.o ./source/start.d ./source/start.o ./source/test.d ./source/test.o ./source/wav.d ./source/wav.o
+	-$(RM) ./source/audio.d ./source/audio.o ./source/file_os.d ./source/file_os.o ./source/global.d ./source/global.o ./source/logApp.d ./source/logApp.o ./source/pad.d ./source/pad.o ./source/sai_os.d ./source/sai_os.o ./source/sd_os.d ./source/sd_os.o ./source/sdcard_fatfs_freertos.d ./source/sdcard_fatfs_freertos.o ./source/semihost_hardfault.d ./source/semihost_hardfault.o ./source/start.d ./source/start.o ./source/test.d ./source/test.o ./source/wav.d ./source/wav.o
 
 .PHONY: clean-source
 

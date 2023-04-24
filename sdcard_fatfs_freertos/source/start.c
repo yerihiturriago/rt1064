@@ -32,7 +32,10 @@ static void start_mainThread(void* arg)
 //	audio_play("bullet.wav");
 
 	pad_loadDefaultPads();
-	audio_initEngine();
+	logApp_init();
+	OSA_TimeDelay(200);
+	logApp("%.2f", 4.50);
+//	audio_initEngine();
 //	pad_playNoThrd(0);
 //	audio_padPlay(10, 124);
 //	while(1);

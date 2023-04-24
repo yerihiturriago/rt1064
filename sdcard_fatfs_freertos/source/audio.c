@@ -105,8 +105,6 @@ void audio_initEngine(void)
 			printf("error creating audio thrds. r = %d, index = %d\r\n", r, i);
 			return;
 		}
-//		OSA_TimeDelay(200);
-//		vTaskDelay(200);
 	}
 }
 
@@ -115,15 +113,18 @@ void audio_thrdPadPlay(void* arg)
 	uint8_t i = *((uint8_t*)arg);
 	if(i >= AUDIO_THRD_NUM)
 		vPortFree(arg);
-//	reqPad_t reqPad = *((reqPad_t*)arg);
+	reqPad_t reqPad = {0};
 //	vPortFree(arg);
 //	printf("padNum = %d, power = %d\r\n", reqPad.padNum, reqPad.power);
 //	printf("thread.i = %d\r\n", audioEngine.i);
-	printf("thread.i = %d\r\n", i);
+//	printf("thread.i = %d\r\n", i);
 //	osa_msgq_handle_t q;
 //	osa_msg_handle_t  m;
 //	OSA_MsgQGet(q, m, osaWaitForever_c);
-	while(1);
+	while(1)
+	{
+//		OSA_MsgQGet(audioEngine.thrdQ[i], &reqPad, osaWaitForever_c);
+	}
 	vTaskDelete(NULL);
 }
 
