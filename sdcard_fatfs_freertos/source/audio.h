@@ -10,7 +10,7 @@
 
 
 #define AUDIO_THRD_NUM			8
-#define AUDIO_THRD_QUEUE_SIZE	3
+#define AUDIO_THRD_QUEUE_SIZE	1
 
 typedef struct st_audioEngine{
 	int16_t* mainBuffer;
@@ -31,7 +31,7 @@ void audio_thrdPadPlay(void* arg);
 TaskHandle_t* audio_getNextThread(void);
 void audio_initEngine(void);
 void audio_initThrdQueue(void);
-osa_msgq_handle_t audio_getNextQueue(void);
+osa_msgq_handle_t* audio_getNextQueue(void);
 
 
 

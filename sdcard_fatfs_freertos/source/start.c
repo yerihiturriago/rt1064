@@ -35,17 +35,10 @@ static void start_mainThread(void* arg)
 	logApp_init();
 	OSA_TimeDelay(200);
 	audio_initEngine();
-	int r = OSA_MsgQCreate(&g_queue, 1, sizeof(reqPad_t));
-	printf("r = %s\r\n", r == KOSA_StatusSuccess ? "success":"error");
-	reqPad_t reqPad = {
-			.power  = 124,
-			.padNum = 1,
-	};
-	OSA_MsgQPut(&g_queue, &reqPad);
-	reqPad_t reqPadCpy = {0};
+	OSA_TimeDelay(200);
+	audio_padPlay(10, 124);
+	audio_padPlay(12, 100);
 
-	logApp("req: padNum = %d, power = %d\r\n", reqPadCpy.padNum, reqPadCpy.power);
-//	audio_padPlay(10, 124);
 	while(1);
 	vTaskDelete(NULL);
 }

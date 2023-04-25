@@ -85,12 +85,12 @@ TaskHandle_t* audio_getNextThread(void)
 	return &audioEngine.thrds[audioEngine.i];
 }
 
-osa_msgq_handle_t audio_getNextQueue(void)
+osa_msgq_handle_t* audio_getNextQueue(void)
 {
 	uint8_t i = audioEngine.iQ;
 	i >= (AUDIO_THRD_NUM-1) ? i = 0:(i += 1);
 	audioEngine.iQ = i;
-	return audioEngine.thrdQ[i];
+	return &(audioEngine.thrdQ[i]);
 }
 
 void audio_initThrdQueue(void)
@@ -133,11 +133,13 @@ void audio_thrdPadPlay(void* arg)
 	if(i >= AUDIO_THRD_NUM)
 		return;
 	vPortFree(arg);
+	logApp("threadId = %d. Working...\r\n", i);
 	reqPad_t reqPad = {0};
 	while(1)
 	{
-		OSA_MsgQGet(&g_queue, &reqPad, osaWaitForever_c);
+//		OSA_MsgQGet(&g_queue, &reqPad, osaWaitForever_c);
 //		OSA_MsgQGet(&(audioEngine.thrdQ[i]), &reqPad, osaWaitForever_c);
+		OSA_MsgQGet(&(audioEngine.thrdQ[i]), &reqPad, osaWaitForever_c);
 		logApp("thrd[%d]: pad = %d, power = %d\r\n", i, reqPad.padNum, reqPad.power);
 
 	}
@@ -146,16 +148,13 @@ void audio_thrdPadPlay(void* arg)
 
 void audio_padPlay(uint8_t padNum, uint8_t power)
 {
-//	reqPad_t* reqPad = (reqPad_t*)pvPortMalloc(sizeof(reqPad_t));
-//	reqPad->padNum = padNum;
-//	reqPad->power  = power;
 	const reqPad_t reqPad = {
 		.power  = power,
 		.padNum = padNum
 	};
-	osa_msgq_handle_t handle = audio_getNextQueue();
-//	if(KOSA_StatusSuccess != OSA_MsgQPut(&handle, (osa_msg_handle_t)&reqPad))
-	if(KOSA_StatusSuccess != OSA_MsgQPut(&g_queue, (osa_msg_handle_t)&reqPad))
+//	logApp("req: padNum = %d, power = %d\r\n", padNum, power);
+	osa_msgq_handle_t* queue = audio_getNextQueue();
+	if(KOSA_StatusSuccess != OSA_MsgQPut(queue, (osa_msg_handle_t)&reqPad))
 	{
 		printf("audio_padPlay(): error msg queue putting\r\n");
 		return;
