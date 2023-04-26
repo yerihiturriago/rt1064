@@ -36,8 +36,9 @@ static void start_mainThread(void* arg)
 	OSA_TimeDelay(200);
 	audio_initEngine();
 	OSA_TimeDelay(200);
-	audio_padPlay(10, 124);
-	audio_padPlay(12, 100);
+	audio_padPlay(0, 124);
+	OSA_TimeDelay(500);
+	OSA_EventSet(&event_transferDone, EVENT_TRANSFER_DONE_FLAG);
 
 	while(1);
 	vTaskDelete(NULL);

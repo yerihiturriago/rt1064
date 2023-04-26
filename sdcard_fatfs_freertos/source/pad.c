@@ -120,6 +120,22 @@ void pad_playNoThrd(uint8_t padNum)
 //}
 
 
-
+int16_t* pad_getRamByNumber(uint8_t padNum)
+{
+	switch(padNum)
+	{
+		case PAD_SNARE: 	return snareRam;
+		case PAD_KICK: 		return kickRam;
+		case PAD_HITHAT: 	return hithatRam;
+		case PAD_TOM1: 		return tom1Ram;
+		case PAD_TOM2: 		return tom2Ram;
+		case PAD_TOM3: 		return tom3Ram;
+		case PAD_CRASH1: 	return crash1Ram;
+		case PAD_CRASH2: 	return crash2Ram;
+		case PAD_CHINA: 	return chinaRam;
+//		case PAD_SPLASH: 	return splas;
+		default: 			break;
+	}
+}
 
 

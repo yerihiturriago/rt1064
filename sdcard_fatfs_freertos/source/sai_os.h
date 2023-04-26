@@ -16,10 +16,13 @@
 #define SAI_BUFFER_HALF_SIZE 			SAI_BUFFER_SIZE/2
 #define SAI_BUFFER_HALF_SIZE_BYTES 		SAI_BUFFER_SIZE_BYTES/2
 
+#define EVENT_TRANSFER_DONE_FLAG		(uint32_t)1
+
 extern bool g_saiTransferDone;
 extern __DATA(RAM4) int16_t ramBuffer[SAI_BUFFER_SIZE];
 extern __DATA(RAM4) int16_t filePlayBuffer[SAI_BUFFER_HALF_SIZE];
 extern sai_transfer_t xfer[1];
+extern osa_semaphore_handle_t event_transferDone;
 
 
 void sai_os_init(void);

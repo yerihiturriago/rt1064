@@ -13,7 +13,6 @@ audioEngine_t audioEngine = {
 
 osa_msgq_handle_t g_queue;
 
-
 void audio_play(const char* fileName)
 {
 	printf("audio play func\r\n");
@@ -75,6 +74,7 @@ void audio_mixBuffer(int16_t* toMix, uint32_t startIndex, uint32_t length)
 }
 
 
+
 TaskHandle_t* audio_getNextThread(void)
 {
 	printf("audio get audio thread\r\n");
@@ -106,13 +106,23 @@ void audio_initThrdQueue(void)
 	}
 }
 
+void audio_initAudioEvent(void)
+{
+	if(KOSA_StatusSuccess != OSA_EventCreate(&event_transferDone, true))
+	{
+		printf("error cerating semaphore\r\n");
+		return;
+	}
+
+}
+
 void audio_initEngine(void)
 {
 	int r;
 	audio_initThrdQueue();
+	audio_initAudioEvent();
 	for(int i = 0; i < AUDIO_THRD_NUM;i++)
 	{
-
 		uint8_t* ii = (uint8_t*)pvPortMalloc(sizeof(uint8_t));
 		*ii = i;
 		if (pdPASS != (r = xTaskCreate(audio_thrdPadPlay, "audio thrd pad play", 1024,
@@ -135,16 +145,33 @@ void audio_thrdPadPlay(void* arg)
 	vPortFree(arg);
 	logApp("threadId = %d. Working...\r\n", i);
 	reqPad_t reqPad = {0};
+	int16_t* padRam = NULL;
 	while(1)
 	{
-//		OSA_MsgQGet(&g_queue, &reqPad, osaWaitForever_c);
-//		OSA_MsgQGet(&(audioEngine.thrdQ[i]), &reqPad, osaWaitForever_c);
 		OSA_MsgQGet(&(audioEngine.thrdQ[i]), &reqPad, osaWaitForever_c);
 		logApp("thrd[%d]: pad = %d, power = %d\r\n", i, reqPad.padNum, reqPad.power);
+		while(1)
+		{
+			padRam = pad_getRamByNumber(reqPad.padNum);
+			audio_mixBufferControlled(padRam);
+		}
 
 	}
 	vTaskDelete(NULL);
 }
+
+
+void audio_mixBufferControlled(int16_t* toMix)
+{
+	uint32_t flags;
+	OSA_EventWait(&event_transferDone,
+			EVENT_TRANSFER_DONE_FLAG,
+			EVENT_TRANSFER_DONE_FLAG,
+			osaWaitForever_c,
+			&flags);
+	logApp("event start\r\n");
+}
+
 
 void audio_padPlay(uint8_t padNum, uint8_t power)
 {
@@ -161,8 +188,6 @@ void audio_padPlay(uint8_t padNum, uint8_t power)
 	}
 
 }
-
-
 
 
 
