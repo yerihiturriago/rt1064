@@ -28,6 +28,10 @@ extern "C" {
 #define DMA0_DMA_BASEADDR DMA0
 /* Associated DMAMUX device that is used for muxing of requests. */
 #define DMA0_DMAMUX_BASEADDR DMAMUX
+/* NVIC interrupt vector ID (number). */
+#define INT_0_IRQN DMA0_DMA16_IRQn
+/* NVIC interrupt handler identifier. */
+#define INT_0_IRQHANDLER DMA0_DMA16_IRQHandler
 /* Definition of peripheral ID */
 #define SAI1_PERIPHERAL SAI1
 /* Bit clock source frequency used for calculating the bit clock divider in the TxSetBitClockRate function. */

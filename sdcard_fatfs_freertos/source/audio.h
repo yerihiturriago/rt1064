@@ -32,8 +32,7 @@ TaskHandle_t* audio_getNextThread(void);
 void audio_initEngine(void);
 void audio_initThrdQueue(void);
 osa_msgq_handle_t* audio_getNextQueue(void);
-void audio_mixBufferControlled(int16_t* toMix);
-void audio_initAudioEvent(void);
+void audio_mixBufferControlled(int16_t* toMix, uint8_t* transferDone, uint32_t* iRam);
 
 
 

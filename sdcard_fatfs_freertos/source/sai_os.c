@@ -14,22 +14,36 @@ sai_transfer_t xfer[1] = {
         .dataSize = SAI_BUFFER_SIZE_BYTES,
     }
 };
-osa_event_flags_t flags;
 
-osa_event_handle_t event_transferDone = NULL;
+const UBaseType_t xArrayIndex = 1;
+SemaphoreHandle_t semph_td = NULL;
 
 
 void sai_os_init(void)
 {
     memset(ramBuffer, 0, sizeof(ramBuffer));
+
     EDMA_SetCallback(SAI1_SAI_Tx_eDMA_Handle.dmaHandle, fun_edma_halfTransferCallback, NULL);
     EDMA_TcdEnableInterrupts(STCD_ADDR(SAI1_SAI_Tx_eDMA_Handle.tcd), kEDMA_MajorInterruptEnable | kEDMA_HalfInterruptEnable);
     int r = SAI_TransferSendLoopEDMA(SAI1_PERIPHERAL, &SAI1_SAI_Tx_eDMA_Handle, &xfer[0], 1);
 
-    OSA_EventCreate(&event_transferDone, true);
 }
 
 
+void fun_edma_halfTransferCallback(struct _edma_handle *handle, void *userData, bool transferDone, uint32_t tcds)
+{
+	BaseType_t higherPriority = pdFALSE;
+	memset(transferDone ? &ramBuffer[SAI_BUFFER_HALF_SIZE]:&ramBuffer[0], 0, SAI_BUFFER_HALF_SIZE_BYTES);
+	g_saiTransferDone = transferDone;
+	xSemaphoreGiveFromISR(semph_td, NULL);
+//	if(audioEngine.thrds[0] != NULL)
+
+//	 vTaskNotifyGiveIndexedFromISR(audioEngine.thrds[1],
+//	                                   xArrayIndex,
+//	                                   &higherPriority);
+
+//	printf("sai half t. callback: transferDone %d\r\n", transferDone);
+}
 
 void fun_edma_callback(I2S_Type *base, sai_edma_handle_t *handle, status_t status, void *userData)
 {
@@ -37,17 +51,6 @@ void fun_edma_callback(I2S_Type *base, sai_edma_handle_t *handle, status_t statu
 
 }
 
-void fun_edma_halfTransferCallback(struct _edma_handle *handle, void *userData, bool transferDone, uint32_t tcds)
-{
-
-	memset(transferDone ? &ramBuffer[SAI_BUFFER_HALF_SIZE]:&ramBuffer[0], 0, SAI_BUFFER_HALF_SIZE_BYTES);
-	g_saiTransferDone = transferDone;
-	if(event_transferDone != NULL)
-	{
-//		OSA_EventSet(&event_transferDone, EVENT_TRANSFER_DONE_FLAG);
-	}
-//	printf("sai half t. callback: transferDone %d\r\n", transferDone);
-}
 
 
 

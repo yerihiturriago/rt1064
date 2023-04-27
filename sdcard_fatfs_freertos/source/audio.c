@@ -106,21 +106,11 @@ void audio_initThrdQueue(void)
 	}
 }
 
-void audio_initAudioEvent(void)
-{
-	if(KOSA_StatusSuccess != OSA_EventCreate(&event_transferDone, true))
-	{
-		printf("error cerating semaphore\r\n");
-		return;
-	}
-
-}
 
 void audio_initEngine(void)
 {
 	int r;
 	audio_initThrdQueue();
-	audio_initAudioEvent();
 	for(int i = 0; i < AUDIO_THRD_NUM;i++)
 	{
 		uint8_t* ii = (uint8_t*)pvPortMalloc(sizeof(uint8_t));
@@ -139,7 +129,11 @@ void audio_initEngine(void)
 
 void audio_thrdPadPlay(void* arg)
 {
+	uint32_t iRam = 0;
+	uint8_t transferDone = 0;
+	uint8_t value = 0;
 	uint8_t i = *((uint8_t*)arg);
+	TickType_t tick = pdMS_TO_TICKS( 200 );
 	if(i >= AUDIO_THRD_NUM)
 		return;
 	vPortFree(arg);
@@ -148,28 +142,50 @@ void audio_thrdPadPlay(void* arg)
 	int16_t* padRam = NULL;
 	while(1)
 	{
+//		while(1)
+//		{
+//			logApp("thread waiting notification\r\n", value);
+//			value = ulTaskNotifyTakeIndexed(xArrayIndex, pdTRUE, tick);
+//		}
 		OSA_MsgQGet(&(audioEngine.thrdQ[i]), &reqPad, osaWaitForever_c);
 		logApp("thrd[%d]: pad = %d, power = %d\r\n", i, reqPad.padNum, reqPad.power);
-		while(1)
+		while(iRam < PAD_SIZE_16BIT)
 		{
-			padRam = pad_getRamByNumber(reqPad.padNum);
-			audio_mixBufferControlled(padRam);
+//			padRam = pad_getRamByNumber(reqPad.padNum);
+			logApp("thread waiting notification\r\n", value);
+			value = xSemaphoreTake(semph_td, portMAX_DELAY);
+//			value = ulTaskNotifyTakeIndexed(xArrayIndex, pdTRUE, portMAX_DELAY);
+			logApp("task notification value %d\r\n", value);
+//			padRam = snareRam;
+//			audio_mixBufferControlled(padRam, &transferDone, &iRam);
 		}
-
+		logApp("pad thread finished\r\n");
 	}
 	vTaskDelete(NULL);
 }
 
 
-void audio_mixBufferControlled(int16_t* toMix)
+void audio_mixBufferControlled(int16_t* toMix, uint8_t* transferDone, uint32_t* iRam)
 {
-	uint32_t flags;
-	OSA_EventWait(&event_transferDone,
-			EVENT_TRANSFER_DONE_FLAG,
-			EVENT_TRANSFER_DONE_FLAG,
-			osaWaitForever_c,
-			&flags);
-	logApp("event start\r\n");
+//	static uint8_t transferDone;
+//	OSA_EventWait(&event_transferDone,
+//			EVENT_TRANSFER_DONE_FLAG,
+//			EVENT_TRANSFER_DONE_FLAG,
+//			osaWaitForever_c,
+//			&flags);
+
+
+//	if(*transferDone != g_saiTransferDone)
+//	{
+//		*transferDone = g_saiTransferDone;
+		logApp("mixing. iRam = %d\r\n", *iRam);
+		audio_mixBuffer(toMix, *transferDone ? SAI_BUFFER_HALF_SIZE:0, SAI_BUFFER_HALF_SIZE);
+//		(PAD_SIZE_16BIT - *iRam <= SAI_BUFFER_HALF_SIZE) ?
+//				*iRam = SAI_BUFFER_HALF_SIZE + *iRam;
+//				(*iRam = PAD_SIZE_16BIT - *iRam);
+//	}
+
+//	logApp("event start\r\n");
 }
 
 

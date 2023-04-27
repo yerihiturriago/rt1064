@@ -626,8 +626,21 @@
                <instances>
                   <instance name="NVIC" uuid="c8eee5d1-c168-42b0-8545-edf141320c4a" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="nvic">
-                        <array name="interrupt_table"/>
-                        <array name="interrupts"/>
+                        <array name="interrupt_table">
+                           <struct name="0"/>
+                        </array>
+                        <array name="interrupts">
+                           <struct name="0">
+                              <setting name="channelId" value="int_0"/>
+                              <struct name="interrupt_t">
+                                 <setting name="IRQn" value="DMA0_DMA16_IRQn"/>
+                                 <setting name="enable_interrrupt" value="enabled"/>
+                                 <setting name="enable_priority" value="false"/>
+                                 <setting name="priority" value="0"/>
+                                 <setting name="enable_custom_name" value="false"/>
+                              </struct>
+                           </struct>
+                        </array>
                      </config_set>
                   </instance>
                   <instance name="SAI1" uuid="8046bcf5-28cf-4e72-a03d-81357243bc38" type="sai" type_id="sai_d277a9f96e6a702cd0cbe3311dc8aff9" mode="edma" peripheral="SAI1" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">

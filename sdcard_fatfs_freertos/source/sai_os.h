@@ -22,8 +22,9 @@ extern bool g_saiTransferDone;
 extern __DATA(RAM4) int16_t ramBuffer[SAI_BUFFER_SIZE];
 extern __DATA(RAM4) int16_t filePlayBuffer[SAI_BUFFER_HALF_SIZE];
 extern sai_transfer_t xfer[1];
-extern osa_semaphore_handle_t event_transferDone;
 
+extern const UBaseType_t xArrayIndex;
+extern SemaphoreHandle_t semph_td;
 
 void sai_os_init(void);
 void fun_edma_callback(I2S_Type *base, sai_edma_handle_t *handle, status_t status, void *userData);

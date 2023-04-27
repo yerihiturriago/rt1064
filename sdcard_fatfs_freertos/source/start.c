@@ -6,6 +6,8 @@ static void start_mainThread(void* arg);
 
 void start_initModules(void)
 {
+	for(int i = 0; i < AUDIO_THRD_NUM; i++)
+		audioEngine.thrds[i] = NULL;
     sai_os_init();
     sd_os_init();
 }
@@ -30,15 +32,13 @@ static void start_mainThread(void* arg)
 	printf("main thread working\r\n");
 //	test_playBullet();
 //	audio_play("bullet.wav");
-
+	semph_td = xSemaphoreCreateBinary();
 	pad_loadDefaultPads();
 	logApp_init();
 	OSA_TimeDelay(200);
 	audio_initEngine();
 	OSA_TimeDelay(200);
 	audio_padPlay(0, 124);
-	OSA_TimeDelay(500);
-	OSA_EventSet(&event_transferDone, EVENT_TRANSFER_DONE_FLAG);
 
 	while(1);
 	vTaskDelete(NULL);
