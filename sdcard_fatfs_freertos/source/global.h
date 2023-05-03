@@ -27,6 +27,7 @@
 #include "test.h"
 #include "start.h"
 #include "wav.h"
+#include "audio_engine.h"
 #include "audio.h"
 #include "pad.h"
 #include "file_os.h"

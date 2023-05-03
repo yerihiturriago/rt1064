@@ -5,12 +5,6 @@
 
 uint8_t g_isPlayingAudio = false;
 
-audioEngine_t audioEngine = {
-	.mainBuffer = ramBuffer,
-	.i 			= 0,
-	.iQ 		= 0,
-};
-
 osa_msgq_handle_t g_queue;
 
 void audio_play(const char* fileName)
@@ -80,8 +74,8 @@ TaskHandle_t* audio_getNextThread(void)
 	printf("audio get audio thread\r\n");
 	audioEngine.i >= (AUDIO_THRD_NUM-1) ? audioEngine.i = 0:audioEngine.i++;
 //	printf("task state = %d\r\n", eTaskGetState(audioEngine.thrds[audioEngine.i]));
-//	if(eTaskGetState(audioEngine.thrds[audioEngine.i]) < eSuspended)
-//		vTaskSuspend(audioEngine.thrds[audioEngine.i]);
+	if(audioEngine.thrdState[audioEngine.i] == AUDIO_THRD_STATE_BUSY)
+		audioEngine.thrdState[audioEngine.i] = AUDIO_THRD_STATE_AVAIL;
 	return &audioEngine.thrds[audioEngine.i];
 }
 
@@ -175,17 +169,12 @@ void audio_mixBufferControlled(int16_t* toMix, uint8_t* transferDone, uint32_t* 
 //			&flags);
 
 
-//	if(*transferDone != g_saiTransferDone)
-//	{
-//		*transferDone = g_saiTransferDone;
 		logApp("mixing. iRam = %d\r\n", *iRam);
 		audio_mixBuffer(toMix, *transferDone ? SAI_BUFFER_HALF_SIZE:0, SAI_BUFFER_HALF_SIZE);
 //		(PAD_SIZE_16BIT - *iRam <= SAI_BUFFER_HALF_SIZE) ?
 //				*iRam = SAI_BUFFER_HALF_SIZE + *iRam;
 //				(*iRam = PAD_SIZE_16BIT - *iRam);
-//	}
 
-//	logApp("event start\r\n");
 }
 
 

@@ -635,8 +635,8 @@
                               <struct name="interrupt_t">
                                  <setting name="IRQn" value="DMA0_DMA16_IRQn"/>
                                  <setting name="enable_interrrupt" value="enabled"/>
-                                 <setting name="enable_priority" value="false"/>
-                                 <setting name="priority" value="0"/>
+                                 <setting name="enable_priority" value="true"/>
+                                 <setting name="priority" value="4"/>
                                  <setting name="enable_custom_name" value="false"/>
                               </struct>
                            </struct>

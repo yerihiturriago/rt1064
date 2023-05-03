@@ -9,18 +9,7 @@
 #include "global.h"
 
 
-#define AUDIO_THRD_NUM			8
-#define AUDIO_THRD_QUEUE_SIZE	1
 
-typedef struct st_audioEngine{
-	int16_t* mainBuffer;
-	uint8_t i;
-	uint8_t iQ;
-	TaskHandle_t thrds[AUDIO_THRD_NUM];
-	osa_msgq_handle_t thrdQ[AUDIO_THRD_NUM];
-
-}audioEngine_t;
-extern audioEngine_t audioEngine;
 extern osa_msgq_handle_t g_queue;
 
 void audio_play(const char* fileName);
