@@ -15,7 +15,6 @@
 #include "fsl_sai.h"
 #include "fsl_sai_edma.h"
 #include "fsl_clock.h"
-#include "FreeRTOSConfig.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -31,6 +30,8 @@ extern "C" {
 #define DMA0_DMAMUX_BASEADDR DMAMUX
 /* NVIC interrupt vector ID (number). */
 #define INT_0_IRQN DMA0_DMA16_IRQn
+/* NVIC interrupt vector priority. */
+#define INT_0_IRQ_PRIORITY 4
 /* NVIC interrupt handler identifier. */
 #define INT_0_IRQHANDLER DMA0_DMA16_IRQHandler
 /* Definition of peripheral ID */

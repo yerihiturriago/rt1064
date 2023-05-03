@@ -122,8 +122,8 @@ instance:
         - interrupt_t:
           - IRQn: 'DMA0_DMA16_IRQn'
           - enable_interrrupt: 'enabled'
-          - enable_priority: 'false'
-          - priority: '0'
+          - enable_priority: 'true'
+          - priority: '4'
           - enable_custom_name: 'false'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -378,6 +378,8 @@ static void SEMC_init(void) {
  **********************************************************************************************************************/
 static void BOARD_InitPeripherals_CommonPostInit(void)
 {
+  /* Interrupt vector DMA0_DMA16_IRQn priority settings in the NVIC. */
+  NVIC_SetPriority(INT_0_IRQN, INT_0_IRQ_PRIORITY);
   /* Enable interrupt DMA0_DMA16_IRQn request in the NVIC. */
   EnableIRQ(INT_0_IRQN);
 }
@@ -386,7 +388,6 @@ void BOARD_InitPeripherals(void)
 {
   /* Global initialization */
   DMAMUX_Init(DMA0_DMAMUX_BASEADDR);
-  NVIC_SetPriority(DMA0_DMA16_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
   EDMA_Init(DMA0_DMA_BASEADDR, &DMA0_config);
 
   /* Initialize components */
