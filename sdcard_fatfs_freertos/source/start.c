@@ -32,7 +32,6 @@ static void start_mainThread(void* arg)
 	printf("main thread working\r\n");
 //	test_playBullet();
 //	audio_play("bullet.wav");
-	semph_td = xSemaphoreCreateBinary();
 	pad_loadDefaultPads();
 	logApp_init();
 	OSA_TimeDelay(200);

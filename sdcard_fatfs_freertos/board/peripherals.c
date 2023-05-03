@@ -386,6 +386,7 @@ void BOARD_InitPeripherals(void)
 {
   /* Global initialization */
   DMAMUX_Init(DMA0_DMAMUX_BASEADDR);
+  NVIC_SetPriority(DMA0_DMA16_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
   EDMA_Init(DMA0_DMA_BASEADDR, &DMA0_config);
 
   /* Initialize components */

@@ -22,6 +22,7 @@ SemaphoreHandle_t semph_td = NULL;
 void sai_os_init(void)
 {
     memset(ramBuffer, 0, sizeof(ramBuffer));
+    semph_td = xSemaphoreCreateBinary();
 
     EDMA_SetCallback(SAI1_SAI_Tx_eDMA_Handle.dmaHandle, fun_edma_halfTransferCallback, NULL);
     EDMA_TcdEnableInterrupts(STCD_ADDR(SAI1_SAI_Tx_eDMA_Handle.tcd), kEDMA_MajorInterruptEnable | kEDMA_HalfInterruptEnable);

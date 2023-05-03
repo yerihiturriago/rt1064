@@ -15,6 +15,7 @@
 #include "fsl_sai.h"
 #include "fsl_sai_edma.h"
 #include "fsl_clock.h"
+#include "FreeRTOSConfig.h"
 
 #if defined(__cplusplus)
 extern "C" {
