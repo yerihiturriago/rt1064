@@ -73,7 +73,6 @@ int main(void)
     BOARD_InitSEMC();
     BOARD_InitPeripherals();
 
-
     PRINTF("\r\nSDCARD fatfs freertos example.\r\n");
 
 //    test_loadSawWave();

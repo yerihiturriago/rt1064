@@ -136,24 +136,28 @@ void audio_thrdPadPlay(void* arg)
 	int16_t* padRam = NULL;
 	while(1)
 	{
-//		while(1)
-//		{
-//			logApp("thread waiting notification\r\n", value);
-//			value = ulTaskNotifyTakeIndexed(xArrayIndex, pdTRUE, tick);
-//		}
 		OSA_MsgQGet(&(audioEngine.thrdQ[i]), &reqPad, osaWaitForever_c);
 		logApp("thrd[%d]: pad = %d, power = %d\r\n", i, reqPad.padNum, reqPad.power);
-		while(iRam < PAD_SIZE_16BIT)
+		xSemaphoreTake(audioEngine.semph, portMAX_DELAY);
+		audioEngine.thrdState[i] = AUDIO_THRD_STATE_BUSY;
+		transferDone = audioEngine.transferDoneSAI;
+		xSemaphoreGive(audioEngine.semph);
+
+		while(1)
 		{
-//			padRam = pad_getRamByNumber(reqPad.padNum);
-			logApp("thread waiting notification\r\n", value);
-			value = xSemaphoreTake(semph_td, portMAX_DELAY);
-//			value = ulTaskNotifyTakeIndexed(xArrayIndex, pdTRUE, portMAX_DELAY);
-			logApp("task notification value %d\r\n", value);
-//			padRam = snareRam;
-//			audio_mixBufferControlled(padRam, &transferDone, &iRam);
+			if(iRam >= PAD_SIZE_16BIT)
+				break;
+			if(audioEngine.thrdState[i] == AUDIO_THRD_STATE_AVAIL)
+				break;
+			padRam = pad_getRamByNumber(reqPad.padNum);
+//			logApp("thread waiting notification\r\n");
+//			xSemaphoreTake(semph_td, portMAX_DELAY);
+			xTaskNotifyWait(ULONG_MAX, ULONG_MAX, NULL, portMAX_DELAY);
+			logApp("thrd[%d]: %d. task notification taken\r\n", i);
+			audio_mixBufferControlled(padRam, &transferDone, &iRam);
 		}
-		logApp("pad thread finished\r\n");
+		iRam = 0;
+		logApp("thrd[%d]: %d. pad thread finished. iRam = %d\r\n", i, iRam);
 	}
 	vTaskDelete(NULL);
 }
@@ -161,20 +165,15 @@ void audio_thrdPadPlay(void* arg)
 
 void audio_mixBufferControlled(int16_t* toMix, uint8_t* transferDone, uint32_t* iRam)
 {
-//	static uint8_t transferDone;
-//	OSA_EventWait(&event_transferDone,
-//			EVENT_TRANSFER_DONE_FLAG,
-//			EVENT_TRANSFER_DONE_FLAG,
-//			osaWaitForever_c,
-//			&flags);
-
-
-		logApp("mixing. iRam = %d\r\n", *iRam);
-		audio_mixBuffer(toMix, *transferDone ? SAI_BUFFER_HALF_SIZE:0, SAI_BUFFER_HALF_SIZE);
-//		(PAD_SIZE_16BIT - *iRam <= SAI_BUFFER_HALF_SIZE) ?
-//				*iRam = SAI_BUFFER_HALF_SIZE + *iRam;
-//				(*iRam = PAD_SIZE_16BIT - *iRam);
-
+	uint32_t sizeDataTransfer;
+	if(PAD_SIZE_16BIT - *iRam >= SAI_BUFFER_HALF_SIZE)
+		sizeDataTransfer = SAI_BUFFER_HALF_SIZE;
+	else
+		sizeDataTransfer = PAD_SIZE_16BIT - *iRam;
+	logApp("mixing. iRam = %d, sizeDatatransfer = %d\r\n", *iRam, sizeDataTransfer);
+//	logApp("mixing. addr = %d\r\n", toMix+(*iRam));
+	audio_mixBuffer(toMix+(*iRam), *transferDone ? SAI_BUFFER_HALF_SIZE:0, sizeDataTransfer);
+	*iRam += sizeDataTransfer;
 }
 
 

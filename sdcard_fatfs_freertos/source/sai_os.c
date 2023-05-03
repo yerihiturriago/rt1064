@@ -23,6 +23,7 @@ void sai_os_init(void)
 {
     memset(ramBuffer, 0, sizeof(ramBuffer));
     semph_td = xSemaphoreCreateBinary();
+    audioEngine.semph = xSemaphoreCreateBinary();
 
     EDMA_SetCallback(SAI1_SAI_Tx_eDMA_Handle.dmaHandle, fun_edma_halfTransferCallback, NULL);
     EDMA_TcdEnableInterrupts(STCD_ADDR(SAI1_SAI_Tx_eDMA_Handle.tcd), kEDMA_MajorInterruptEnable | kEDMA_HalfInterruptEnable);
@@ -35,14 +36,17 @@ void fun_edma_halfTransferCallback(struct _edma_handle *handle, void *userData, 
 {
 	BaseType_t higherPriority = pdFALSE;
 	memset(transferDone ? &ramBuffer[SAI_BUFFER_HALF_SIZE]:&ramBuffer[0], 0, SAI_BUFFER_HALF_SIZE_BYTES);
+//	xSemaphoreGiveFromISR(semph_td, NULL);
+//	audioEng_notifyThreads();
+	xSemaphoreTakeFromISR(audioEngine.semph, &higherPriority);
 	g_saiTransferDone = transferDone;
-	xSemaphoreGiveFromISR(semph_td, NULL);
-//	if(audioEngine.thrds[0] != NULL)
-
-//	 vTaskNotifyGiveIndexedFromISR(audioEngine.thrds[1],
-//	                                   xArrayIndex,
-//	                                   &higherPriority);
-
+	audioEngine.transferDoneSAI = transferDone;
+	for(int i = 0; i < AUDIO_THRD_NUM; i++)
+		if(audioEngine.thrds[i] != NULL)
+			xTaskNotifyFromISR(audioEngine.thrds[i], 0, eNoAction, pdFALSE);
+//	if(audioEngine.thrds[1] != NULL)
+//		xTaskNotifyFromISR(audioEngine.thrds[1], 0, eNoAction, pdFALSE);
+	xSemaphoreGiveFromISR(audioEngine.semph, NULL);
 //	printf("sai half t. callback: transferDone %d\r\n", transferDone);
 }
 

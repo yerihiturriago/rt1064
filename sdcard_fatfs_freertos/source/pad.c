@@ -134,7 +134,7 @@ int16_t* pad_getRamByNumber(uint8_t padNum)
 		case PAD_CRASH2: 	return crash2Ram;
 		case PAD_CHINA: 	return chinaRam;
 //		case PAD_SPLASH: 	return splas;
-		default: 			break;
+		default: 			return snareRam;
 	}
 }
 

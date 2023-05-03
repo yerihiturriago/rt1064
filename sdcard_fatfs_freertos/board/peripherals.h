@@ -31,7 +31,7 @@ extern "C" {
 /* NVIC interrupt vector ID (number). */
 #define INT_0_IRQN DMA0_DMA16_IRQn
 /* NVIC interrupt vector priority. */
-#define INT_0_IRQ_PRIORITY 4
+#define INT_0_IRQ_PRIORITY 8
 /* NVIC interrupt handler identifier. */
 #define INT_0_IRQHANDLER DMA0_DMA16_IRQHandler
 /* Definition of peripheral ID */

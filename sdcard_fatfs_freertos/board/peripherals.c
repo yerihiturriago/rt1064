@@ -123,7 +123,7 @@ instance:
           - IRQn: 'DMA0_DMA16_IRQn'
           - enable_interrrupt: 'enabled'
           - enable_priority: 'true'
-          - priority: '4'
+          - priority: '8'
           - enable_custom_name: 'false'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */

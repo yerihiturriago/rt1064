@@ -12,7 +12,7 @@
 /*! @brief Task stack size. */
 #define ACCESSFILE_TASK_STACK_SIZE (1024U)
 /*! @brief Task stack priority. */
-#define ACCESSFILE_TASK_PRIORITY (configMAX_PRIORITIES - 2U)
+#define ACCESSFILE_TASK_PRIORITY (configMAX_PRIORITIES - 5U)
 
 /*! @brief Task stack size. */
 #define CARDDETECT_TASK_STACK_SIZE (1024U)
