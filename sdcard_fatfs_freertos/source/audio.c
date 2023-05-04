@@ -7,6 +7,12 @@ uint8_t g_isPlayingAudio = false;
 
 osa_msgq_handle_t g_queue;
 
+void audio_initRamBuffers(void)
+{
+	memset(snareRam, 0, sizeof(snareRam));
+
+}
+
 void audio_play(const char* fileName)
 {
 	printf("audio play func\r\n");
@@ -147,14 +153,15 @@ void audio_thrdPadPlay(void* arg)
 		{
 			if(iRam >= PAD_SIZE_16BIT)
 				break;
+			transferDone = audioEngine.transferDoneSAI;
+			xSemaphoreTake(audioEngine.semph, portMAX_DELAY);
 			if(audioEngine.thrdState[i] == AUDIO_THRD_STATE_AVAIL)
 				break;
+			xSemaphoreGive(audioEngine.semph);
 			padRam = pad_getRamByNumber(reqPad.padNum);
-//			logApp("thread waiting notification\r\n");
-//			xSemaphoreTake(semph_td, portMAX_DELAY);
-			xTaskNotifyWait(ULONG_MAX, ULONG_MAX, NULL, portMAX_DELAY);
 			logApp("thrd[%d]: %d. task notification taken\r\n", i);
 			audio_mixBufferControlled(padRam, &transferDone, &iRam);
+			xTaskNotifyWait(ULONG_MAX, ULONG_MAX, NULL, portMAX_DELAY);
 		}
 		iRam = 0;
 		logApp("thrd[%d]: %d. pad thread finished. iRam = %d\r\n", i, iRam);
