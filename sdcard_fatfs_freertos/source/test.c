@@ -197,7 +197,7 @@ static void test_thrdPlayBullet(void* arg)
 				bytesToRead = fileSize - lseek;
 
 			f_read(&g_fileObject1,
-					g_saiTransferDone ? &ramBuffer[SAI_BUFFER_HALF_SIZE]:&ramBuffer[0],
+					g_saiTransferDone ? &saiBuffer[SAI_BUFFER_HALF_SIZE]:&saiBuffer[0],
 					SAI_BUFFER_HALF_SIZE_BYTES,
 					&numReadBytes);
 			lseek += bytesToRead;
@@ -217,7 +217,7 @@ static void test_thrdPlayBullet(void* arg)
 void test_loadSawWave(void)
 {
     for(int i = 0; i < SAI_BUFFER_SIZE; i++)
-    	ramBuffer[i] = i;
+    	saiBuffer[i] = i;
 }
 
 void test_loadInRam32MB(void)

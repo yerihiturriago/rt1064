@@ -74,7 +74,7 @@ void pad_playNoThrd(uint8_t padNum)
 		if(transferDoneCopy != g_saiTransferDone)
 		{
 			transferDoneCopy = g_saiTransferDone;
-			audio_mixBuffer(&snareRam[i], transferDoneCopy ? SAI_BUFFER_HALF_SIZE:0, SAI_BUFFER_HALF_SIZE);
+			audio_mixInSaiBuffer(&snareRam[i], transferDoneCopy ? SAI_BUFFER_HALF_SIZE:0, SAI_BUFFER_HALF_SIZE);
 			i += SAI_BUFFER_HALF_SIZE;
 			printf("mixing: %d\r\n", i);
 		}

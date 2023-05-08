@@ -21,12 +21,6 @@
 #define PAD_CHINA	8
 #define PAD_SPLASH	9
 
-typedef struct st_requestPAD{
-	uint8_t padNum;	//pad number
-	uint8_t power;	//power or volume
-	uint8_t i;		//audio thread index
-}reqPad_t;
-
 
 extern int16_t snareRam[PAD_SIZE_16BIT];
 extern int16_t kickRam[PAD_SIZE_16BIT];

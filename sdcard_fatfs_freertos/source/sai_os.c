@@ -6,11 +6,11 @@
 #include "sai_os.h"
 
 bool g_saiTransferDone = true;
-__DATA(RAM4) int16_t ramBuffer[SAI_BUFFER_SIZE];
-__DATA(RAM4) int16_t filePlayBuffer[SAI_BUFFER_HALF_SIZE];
+int16_t saiBuffer[SAI_BUFFER_SIZE];
+__DATA(RAM4) int16_t filePlayBuffer[AUDIO_BUFFER_SIZE_500ms];
 sai_transfer_t xfer[1] = {
     {
-        .data     = (uint8_t*)&ramBuffer[0],
+        .data     = (uint8_t*)&saiBuffer[0],
         .dataSize = SAI_BUFFER_SIZE_BYTES,
     }
 };
@@ -21,7 +21,7 @@ SemaphoreHandle_t semph_td = NULL;
 
 void sai_os_init(void)
 {
-    memset(ramBuffer, 0, sizeof(ramBuffer));
+    memset(saiBuffer, 0, sizeof(saiBuffer));
     semph_td = xSemaphoreCreateBinary();
     audioEngine.semph = xSemaphoreCreateBinary();
 
@@ -35,18 +35,32 @@ void sai_os_init(void)
 void fun_edma_halfTransferCallback(struct _edma_handle *handle, void *userData, bool transferDone, uint32_t tcds)
 {
 	BaseType_t higherPriority = pdFALSE;
-	memset(transferDone ? &ramBuffer[SAI_BUFFER_HALF_SIZE]:&ramBuffer[0], 0, SAI_BUFFER_HALF_SIZE_BYTES);
-//	xSemaphoreGiveFromISR(semph_td, NULL);
-//	audioEng_notifyThreads();
 	xSemaphoreTakeFromISR(audioEngine.semph, &higherPriority);
+	xSemaphoreTakeFromISR(mixCh.semph, &higherPriority);
 	g_saiTransferDone = transferDone;
 	audioEngine.transferDoneSAI = transferDone;
+
+	if(mixCh.i >= AUDIO_BUFFER_MIX_SIZE - 1)
+		mixCh.i = 0;
+
+	memset(transferDone ? &saiBuffer[SAI_BUFFER_HALF_SIZE]:&saiBuffer[0], 0, SAI_BUFFER_HALF_SIZE_BYTES);
+	memcpy(transferDone ? &saiBuffer[SAI_BUFFER_HALF_SIZE]:&saiBuffer[0], &(mixCh.buffer[mixCh.i]),
+			(mixCh.i + AUDIO_BUFFER_SIZE >= AUDIO_BUFFER_MIX_SIZE)?
+					(AUDIO_BUFFER_SIZE-1)*SAI_BYTES_PER_SAMPLES:(AUDIO_BUFFER_SIZE_BYTES));
+	memset(&mixCh.buffer[mixCh.i], 0, AUDIO_BUFFER_SIZE_BYTES);
+
+	(mixCh.i + AUDIO_BUFFER_SIZE) < AUDIO_BUFFER_MIX_SIZE ? (mixCh.i += AUDIO_BUFFER_SIZE):(mixCh.i = 0);
+	mixCh.j = (mixCh.i+AUDIO_BUFFER_SIZE);
+
+	xSemaphoreGiveFromISR(mixCh.semph, NULL);
+	xSemaphoreGiveFromISR(audioEngine.semph, NULL);
+
+//	if(audioEngine.thrdMix != NULL)
+//		xTaskNotifyFromISR(audioEngine.thrdMix, 0, eNoAction, pdFALSE);
+
 	for(int i = 0; i < AUDIO_THRD_NUM; i++)
 		if(audioEngine.thrds[i] != NULL)
 			xTaskNotifyFromISR(audioEngine.thrds[i], 0, eNoAction, pdFALSE);
-//	if(audioEngine.thrds[1] != NULL)
-//		xTaskNotifyFromISR(audioEngine.thrds[1], 0, eNoAction, pdFALSE);
-	xSemaphoreGiveFromISR(audioEngine.semph, NULL);
 //	printf("sai half t. callback: transferDone %d\r\n", transferDone);
 }
 
