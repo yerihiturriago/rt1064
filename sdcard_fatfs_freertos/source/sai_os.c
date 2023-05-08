@@ -24,6 +24,7 @@ void sai_os_init(void)
     memset(saiBuffer, 0, sizeof(saiBuffer));
     semph_td = xSemaphoreCreateBinary();
     audioEngine.semph = xSemaphoreCreateBinary();
+    audio_mixInit();
 
     EDMA_SetCallback(SAI1_SAI_Tx_eDMA_Handle.dmaHandle, fun_edma_halfTransferCallback, NULL);
     EDMA_TcdEnableInterrupts(STCD_ADDR(SAI1_SAI_Tx_eDMA_Handle.tcd), kEDMA_MajorInterruptEnable | kEDMA_HalfInterruptEnable);

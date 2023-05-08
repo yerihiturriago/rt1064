@@ -66,7 +66,6 @@ static void audio_playThrd(void* arg)
 
 void audio_thrdPadPlay(void* arg)
 {
-	uint32_t iRam = 0;
 	uint8_t transferDone = 0;
 	uint8_t value = 0;
 	uint8_t i = *((uint8_t*)arg);
@@ -92,7 +91,7 @@ void audio_thrdPadPlay(void* arg)
 
 		while(1)
 		{
-			if(iRam >= PAD_SIZE_16BIT)
+			if(config.iMix >= PAD_SIZE_16BIT)
 				break;
 			xSemaphoreTake(audioEngine.semph, portMAX_DELAY);
 			transferDone = audioEngine.transferDoneSAI;
@@ -102,13 +101,15 @@ void audio_thrdPadPlay(void* arg)
 				break;
 			}
 			xSemaphoreGive(audioEngine.semph);
-			padRam = pad_getRamByNumber(reqPad.padNum);
+//			padRam = pad_getRamByNumber(reqPad.padNum);
 //			logApp("thrd[%d]: %d. task notification taken\r\n", i);
 //			audio_mixBufferControlled(padRam, &transferDone, &iRam);
+			xSemaphoreTake(mixCh.semph, portMAX_DELAY);
 			audio_mixInChannel(&config);
+			xSemaphoreGive(mixCh.semph);
 			xTaskNotifyWait(ULONG_MAX, ULONG_MAX, NULL, portMAX_DELAY);
 		}
-		iRam = 0;
+		config.iMix = 0;
 		xSemaphoreTake(audioEngine.semph, portMAX_DELAY);
 		audioEngine.thrdState[i] = AUDIO_THRD_STATE_AVAIL;
 		xSemaphoreGive(audioEngine.semph);

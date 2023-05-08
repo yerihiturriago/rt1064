@@ -18,12 +18,6 @@ audioEngine_t audioEngine = {
 	.thrdQ			 = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL}
 };
 
-AudioMixChannel_t mixCh = {
-		.volume = 0,
-		.semph  = NULL,
-		.i		= 0,
-		.j		= 0,
-};
 
 
 
@@ -31,9 +25,9 @@ void audioEng_init(void)
 {
 	int r;
 	audioEng_initThrdQueue();
-	r = xTaskCreate(audioEng_thrdMix, "audio thrd mix", 1024, NULL, ACCESSFILE_TASK_PRIORITY, &audioEngine.thrdMix);
-	if(pdPASS != r)
-		printf("error creating mix thrds. r = %d\r\n", r);
+//	r = xTaskCreate(audioEng_thrdMix, "audio thrd mix", 1024, NULL, ACCESSFILE_TASK_PRIORITY, &audioEngine.thrdMix);
+//	if(pdPASS != r)
+//		printf("error creating mix thrds. r = %d\r\n", r);
 	for(int i = 0; i < AUDIO_THRD_NUM;i++)
 	{
 		uint8_t* ii = (uint8_t*)pvPortMalloc(sizeof(uint8_t));

@@ -32,17 +32,6 @@ typedef struct st_audioEngine{
 
 
 
-typedef struct st_audioMixChannel
-{
-	SemaphoreHandle_t semph;								//semaforo para sincronización de hilos
-	uint32_t 		i;									//indice inicial de mezcla
-	uint32_t    	j;									//indice final de mezcla
-	int16_t 		buffer[AUDIO_BUFFER_SIZE];	//buffer de datos
-	float 			volume;
-
-} AudioMixChannel_t;
-
-extern AudioMixChannel_t mixCh;
 extern audioEngine_t audioEngine;
 
 
