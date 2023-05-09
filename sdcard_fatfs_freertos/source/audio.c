@@ -25,6 +25,7 @@ void audio_playThrd(void* arg)
 	uint32_t fileSize;
 	uint32_t numReadBytes = 0;
 	uint32_t bytesToRead;
+	uint32_t len;
 	uint8_t halfTransferCopy;
 
 	printf("audio play thrd\r\n");
@@ -57,9 +58,12 @@ void audio_playThrd(void* arg)
 			lseek += bytesToRead;
 //			printf("lseek = %d\r\n", lseek);
 			logApp("lseek = %d\r\n", lseek);
-//			xSemaphoreTake(audioEngine.semph, portMAX_DELAY);
-			audio_mixInSaiBuffer(filePlayBuffer, g_saiTransferDone ? SAI_BUFFER_HALF_SIZE:0, SAI_BUFFER_HALF_SIZE);
-//			xSemaphoreGive(audioEngine.semph);
+//			audio_mixInSaiBuffer(filePlayBuffer, g_saiTransferDone ? SAI_BUFFER_HALF_SIZE:0, SAI_BUFFER_HALF_SIZE);
+			len = g_saiTransferDone ? SAI_BUFFER_HALF_SIZE:0 + SAI_BUFFER_HALF_SIZE;
+			for(int i = g_saiTransferDone ? SAI_BUFFER_HALF_SIZE:0; i < len; i++)
+			{
+				saiBuffer[i] = filePlayBuffer[i];
+			}
 			xTaskNotifyWait(ULONG_MAX, ULONG_MAX, NULL, portMAX_DELAY);
 
 		}
