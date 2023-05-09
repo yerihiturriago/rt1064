@@ -58,10 +58,15 @@ void audio_mixInChannel(AudioMixConfig_t* config)
 		config->lengthToMix = PAD_SIZE_16BIT - *iRam;
 
 	float volumeByPower = audio_calculateVolumeByPower(config->power);
-	for (i = config->mixCh->i; i < config->lengthToMix; i++)
-		dst[i] += src[config->iMix];
-//		dst[i] += src[i]*(config->volume)*volumeByPower;
-	config->iMix += config->lengthToMix - 1;
+	for(i = mixCh.i; i < mixCh.j; i++)
+	{
+		mixCh.buffer[i] += src[config->iMix];
+		config->iMix += 1;
+	}
+//	for (i = config->mixCh->i; i < config->lengthToMix; i++)
+//		dst[i] += src[config->iMix];
+////		dst[i] += src[i]*(config->volume)*volumeByPower;
+//	config->iMix += config->lengthToMix - 1;
 }
 
 

@@ -44,11 +44,11 @@ void fun_edma_halfTransferCallback(struct _edma_handle *handle, void *userData, 
 	if(mixCh.i >= AUDIO_BUFFER_MIX_SIZE - 1)
 		mixCh.i = 0;
 
-	memset(transferDone ? &saiBuffer[SAI_BUFFER_HALF_SIZE]:&saiBuffer[0], 0, SAI_BUFFER_HALF_SIZE_BYTES);
+//	memset(transferDone ? &saiBuffer[SAI_BUFFER_HALF_SIZE]:&saiBuffer[0], 0, SAI_BUFFER_HALF_SIZE_BYTES);
 	memcpy(transferDone ? &saiBuffer[SAI_BUFFER_HALF_SIZE]:&saiBuffer[0], &(mixCh.buffer[mixCh.i]), SAI_BUFFER_HALF_SIZE_BYTES);
-
-	memset(&mixCh.buffer[mixCh.i], 0, SAI_BUFFER_HALF_SIZE_BYTES);
-	(mixCh.i + SAI_BUFFER_HALF_SIZE) < AUDIO_BUFFER_MIX_SIZE ? (mixCh.i += SAI_BUFFER_HALF_SIZE):(mixCh.i = 0);
+	memset(&mixCh.buffer[mixCh.i], 0, AUDIO_BUFFER_SIZE);
+//	printf("sai: mixCh.i = %d\r\n", mixCh.i);
+	(mixCh.i + SAI_BUFFER_HALF_SIZE) < AUDIO_BUFFER_MIX_SIZE ? (mixCh.i += SAI_BUFFER_HALF_SIZE):(mixCh.i += AUDIO_BUFFER_MIX_SIZE - mixCh.i);
 	mixCh.j = (mixCh.i+SAI_BUFFER_HALF_SIZE);
 
 	xSemaphoreGiveFromISR(mixCh.semph, NULL);

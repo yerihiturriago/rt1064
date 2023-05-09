@@ -101,10 +101,8 @@ void audio_thrdPadPlay(void* arg)
 				break;
 			}
 			xSemaphoreGive(audioEngine.semph);
-//			padRam = pad_getRamByNumber(reqPad.padNum);
-//			audio_mixBufferControlled(padRam, &transferDone, &iRam);
 			xSemaphoreTake(mixCh.semph, portMAX_DELAY);
-			logApp("thrd[%d]: iRam = %d\r\n", i, config.iMix);
+			logApp("thrd[%d]: iRam = %d, mixCh.i = %d\r\n", i, config.iMix, mixCh.i);
 			audio_mixInChannel(&config);
 			xSemaphoreGive(mixCh.semph);
 			xTaskNotifyWait(ULONG_MAX, ULONG_MAX, NULL, portMAX_DELAY);
