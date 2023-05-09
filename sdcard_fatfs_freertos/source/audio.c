@@ -91,7 +91,7 @@ void audio_thrdPadPlay(void* arg)
 
 		while(1)
 		{
-			if(config.iMix >= PAD_SIZE_16BIT)
+			if(config.iMix >= PAD_SIZE_16BIT-1)
 				break;
 			xSemaphoreTake(audioEngine.semph, portMAX_DELAY);
 			transferDone = audioEngine.transferDoneSAI;
@@ -102,12 +102,13 @@ void audio_thrdPadPlay(void* arg)
 			}
 			xSemaphoreGive(audioEngine.semph);
 //			padRam = pad_getRamByNumber(reqPad.padNum);
-//			logApp("thrd[%d]: %d. task notification taken\r\n", i);
 //			audio_mixBufferControlled(padRam, &transferDone, &iRam);
 			xSemaphoreTake(mixCh.semph, portMAX_DELAY);
+			logApp("thrd[%d]: iRam = %d\r\n", i, config.iMix);
 			audio_mixInChannel(&config);
 			xSemaphoreGive(mixCh.semph);
 			xTaskNotifyWait(ULONG_MAX, ULONG_MAX, NULL, portMAX_DELAY);
+//			logApp("thrd[%d]. task notification taken\r\n", i);
 		}
 		config.iMix = 0;
 		xSemaphoreTake(audioEngine.semph, portMAX_DELAY);

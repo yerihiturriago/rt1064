@@ -11,8 +11,7 @@ void audio_mixInit(void)
 	mixCh.i 	 = 0;
 	mixCh.j 	 = 0;
 	mixCh.volume = 0;
-//	mixCh.semph  =
-
+	mixCh.semph  = xSemaphoreCreateBinary();
 }
 
 void audio_mixInSaiBuffer(int16_t* toMix, uint32_t startIndex, uint32_t length)

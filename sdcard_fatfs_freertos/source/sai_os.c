@@ -37,21 +37,19 @@ void fun_edma_halfTransferCallback(struct _edma_handle *handle, void *userData, 
 {
 	BaseType_t higherPriority = pdFALSE;
 	xSemaphoreTakeFromISR(audioEngine.semph, &higherPriority);
-	xSemaphoreTakeFromISR(mixCh.semph, &higherPriority);
 	g_saiTransferDone = transferDone;
 	audioEngine.transferDoneSAI = transferDone;
 
+	xSemaphoreTakeFromISR(mixCh.semph, &higherPriority);
 	if(mixCh.i >= AUDIO_BUFFER_MIX_SIZE - 1)
 		mixCh.i = 0;
 
 	memset(transferDone ? &saiBuffer[SAI_BUFFER_HALF_SIZE]:&saiBuffer[0], 0, SAI_BUFFER_HALF_SIZE_BYTES);
-	memcpy(transferDone ? &saiBuffer[SAI_BUFFER_HALF_SIZE]:&saiBuffer[0], &(mixCh.buffer[mixCh.i]),
-			(mixCh.i + AUDIO_BUFFER_SIZE >= AUDIO_BUFFER_MIX_SIZE)?
-					(AUDIO_BUFFER_SIZE-1)*SAI_BYTES_PER_SAMPLES:(AUDIO_BUFFER_SIZE_BYTES));
-	memset(&mixCh.buffer[mixCh.i], 0, AUDIO_BUFFER_SIZE_BYTES);
+	memcpy(transferDone ? &saiBuffer[SAI_BUFFER_HALF_SIZE]:&saiBuffer[0], &(mixCh.buffer[mixCh.i]), SAI_BUFFER_HALF_SIZE_BYTES);
 
-	(mixCh.i + AUDIO_BUFFER_SIZE) < AUDIO_BUFFER_MIX_SIZE ? (mixCh.i += AUDIO_BUFFER_SIZE):(mixCh.i = 0);
-	mixCh.j = (mixCh.i+AUDIO_BUFFER_SIZE);
+	memset(&mixCh.buffer[mixCh.i], 0, SAI_BUFFER_HALF_SIZE_BYTES);
+	(mixCh.i + SAI_BUFFER_HALF_SIZE) < AUDIO_BUFFER_MIX_SIZE ? (mixCh.i += SAI_BUFFER_HALF_SIZE):(mixCh.i = 0);
+	mixCh.j = (mixCh.i+SAI_BUFFER_HALF_SIZE);
 
 	xSemaphoreGiveFromISR(mixCh.semph, NULL);
 	xSemaphoreGiveFromISR(audioEngine.semph, NULL);
