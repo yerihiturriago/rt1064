@@ -48,6 +48,7 @@ void audio_getConfigByRequest(reqPad_t* reqPad, AudioMixConfig_t* config)
 void audio_mixInChannel(AudioMixConfig_t* config)
 {
 	uint32_t i;
+	uint32_t length = mixCh.i + SAI_BUFFER_HALF_SIZE;
 	int16_t* dst = config->mixCh->buffer;
 	int16_t* src = config->toMix;
 	uint32_t* iRam = &config->iMix;
@@ -58,15 +59,11 @@ void audio_mixInChannel(AudioMixConfig_t* config)
 		config->lengthToMix = PAD_SIZE_16BIT - *iRam;
 
 	float volumeByPower = audio_calculateVolumeByPower(config->power);
-	for(i = mixCh.i; i < mixCh.j; i++)
+	for(i = mixCh.i; i < length; i++)
 	{
 		mixCh.buffer[i] += src[config->iMix];
 		config->iMix += 1;
 	}
-//	for (i = config->mixCh->i; i < config->lengthToMix; i++)
-//		dst[i] += src[config->iMix];
-////		dst[i] += src[i]*(config->volume)*volumeByPower;
-//	config->iMix += config->lengthToMix - 1;
 }
 
 

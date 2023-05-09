@@ -102,7 +102,7 @@ void audio_thrdPadPlay(void* arg)
 			}
 			xSemaphoreGive(audioEngine.semph);
 			xSemaphoreTake(mixCh.semph, portMAX_DELAY);
-			logApp("thrd[%d]: iRam = %d, mixCh.i = %d\r\n", i, config.iMix, mixCh.i);
+//			logApp("thrd[%d]: iRam = %d, mixCh.i = %d\r\n", i, config.iMix, mixCh.i);
 			audio_mixInChannel(&config);
 			xSemaphoreGive(mixCh.semph);
 			xTaskNotifyWait(ULONG_MAX, ULONG_MAX, NULL, portMAX_DELAY);
@@ -127,6 +127,8 @@ void audio_padPlay(uint8_t padNum, uint8_t power)
 	};
 //	logApp("req: padNum = %d, power = %d\r\n", padNum, power);
 	osa_msgq_handle_t* queue = audio_getNextQueue();
+	if(audioEngine.thrdState[audioEngine.iQ] != AUDIO_THRD_STATE_AVAIL)
+		audioEngine.thrdState[audioEngine.iQ] = AUDIO_THRD_STATE_AVAIL;
 	if(KOSA_StatusSuccess != OSA_MsgQPut(queue, (osa_msg_handle_t)&reqPad))
 	{
 		printf("audio_padPlay(): error msg queue putting\r\n");

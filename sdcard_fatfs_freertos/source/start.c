@@ -44,7 +44,7 @@ static void start_mainThread(void* arg)
 			audio_padPlay(0, 124);
 //			OSA_TimeDelay(200);
 //		}
-		OSA_TimeDelay(8000);
+		OSA_TimeDelay(1000);
 	}
 
 	while(1);
