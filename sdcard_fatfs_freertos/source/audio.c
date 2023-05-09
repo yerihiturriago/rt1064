@@ -11,13 +11,13 @@ osa_msgq_handle_t g_queue;
 void audio_play(const char* fileName)
 {
 	printf("audio play func\r\n");
-    if (pdPASS != xTaskCreate(audio_playThrd, "audio thread", 1024, (void*)fileName, ACCESSFILE_TASK_PRIORITY, NULL))
+    if (pdPASS != xTaskCreate(audio_playThrd, "audio thread", 1024, (void*)fileName, ACCESSFILE_TASK_PRIORITY, &audioEngine.thrdFilePlay))
     {
         return;
     }
 }
 
-static void audio_playThrd(void* arg)
+void audio_playThrd(void* arg)
 {
 	uint8_t r;
 	uint32_t lseek = 0;
@@ -40,8 +40,11 @@ static void audio_playThrd(void* arg)
 	fileSize = wav.fileSize;
 	halfTransferCopy = g_saiTransferDone;
 	g_isPlayingAudio = true;
+	logApp("while\r\n");
 	while(g_isPlayingAudio && (lseek < fileSize))
 	{
+//		logApp("lseek = %d\r\n", lseek);
+		xSemaphoreTake(audioEngine.semph, portMAX_DELAY);
 		if(halfTransferCopy != g_saiTransferDone)
 		{
 			halfTransferCopy = g_saiTransferDone;
@@ -52,10 +55,15 @@ static void audio_playThrd(void* arg)
 
 			f_read(&g_fileObject1, filePlayBuffer, SAI_BUFFER_HALF_SIZE_BYTES, &numReadBytes);
 			lseek += bytesToRead;
-			printf("lseek = %d\r\n", lseek);
+//			printf("lseek = %d\r\n", lseek);
+			logApp("lseek = %d\r\n", lseek);
+//			xSemaphoreTake(audioEngine.semph, portMAX_DELAY);
 			audio_mixInSaiBuffer(filePlayBuffer, g_saiTransferDone ? SAI_BUFFER_HALF_SIZE:0, SAI_BUFFER_HALF_SIZE);
+//			xSemaphoreGive(audioEngine.semph);
+			xTaskNotifyWait(ULONG_MAX, ULONG_MAX, NULL, portMAX_DELAY);
 
 		}
+		xSemaphoreGive(audioEngine.semph);
 	}
 	vTaskDelete(NULL);
 }

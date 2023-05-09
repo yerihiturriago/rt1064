@@ -11,7 +11,7 @@
 
 extern bool g_saiTransferDone;
 extern int16_t saiBuffer[SAI_BUFFER_SIZE];
-extern __DATA(RAM4) int16_t filePlayBuffer[AUDIO_BUFFER_SIZE_500ms];
+extern __DATA(RAM4) int16_t filePlayBuffer[SAI_BUFFER_HALF_SIZE];
 extern sai_transfer_t xfer[1];
 
 extern const UBaseType_t xArrayIndex;

@@ -58,7 +58,7 @@ void pad_loadDefaultPads(void)
 	}
 	printf("file read succesfully\r\n");
 
-
+	f_close(fileOs.fileObj);
 	vPortFree(fileOs.name);
 
 //    if (pdPASS !=

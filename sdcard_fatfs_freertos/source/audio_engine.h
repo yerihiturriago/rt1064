@@ -25,6 +25,7 @@ typedef struct st_audioEngine{
 	uint8_t thrdState[AUDIO_THRD_NUM];
 	TaskHandle_t thrds[AUDIO_THRD_NUM];
 	TaskHandle_t thrdMix;
+	TaskHandle_t thrdFilePlay;
 	osa_msgq_handle_t thrdQ[AUDIO_THRD_NUM];
 
 

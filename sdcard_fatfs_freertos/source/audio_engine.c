@@ -13,6 +13,7 @@ audioEngine_t audioEngine = {
 	.transferDoneSAI = 0,
 	.semph			 = NULL,
 	.thrdMix		 = NULL,
+	.thrdFilePlay	 = NULL,
 	.thrdState  	 = {0,0,0,0,0,0,0,0},
 	.thrds			 = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL},
 	.thrdQ			 = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL}
