@@ -55,7 +55,7 @@ void audio_playNoThrd(const char* fileName)
 			else
 				bytesToRead = fileSize - lseek;
 			f_read(&g_fileObject1, filePlayBuffer, bytesToRead, &numReadBytes);
-			logApp("audio_playNoThrd: lseek = %d\r\n", lseek);
+//			logApp("audio_playNoThrd: lseek = %d\r\n", lseek);
 			xSemaphoreTake(mixCh.semph, portMAX_DELAY);
 //			memcpy(&saiBuffer[transferDoneCopy ? SAI_BUFFER_HALF_SIZE:0], filePlayBuffer, SAI_BUFFER_HALF_SIZE_BYTES);
 			memcpy(&mixCh.buffer[mixCh.i], filePlayBuffer, SAI_BUFFER_HALF_SIZE_BYTES);
