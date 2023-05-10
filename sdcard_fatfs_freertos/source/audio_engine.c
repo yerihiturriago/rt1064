@@ -8,6 +8,7 @@
 
 audioEngine_t audioEngine = {
 	.saiBuffer 	 	 = saiBuffer,
+	.filePlay 		 = {.buffer = filePlayBuffer, .i = 0, .semph = NULL, .volume = 1.0},
 	.i 				 = 0,
 	.iQ 			 = 0,
 	.transferDoneSAI = 0,

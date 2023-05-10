@@ -16,8 +16,16 @@
 
 
 
+typedef struct st_audioFilePlay{
+	int16_t* buffer;
+	uint8_t i;
+	SemaphoreHandle_t semph;
+	float volume;
+}audioFilePlay_t;
+
 typedef struct st_audioEngine{
 	int16_t* saiBuffer;
+	audioFilePlay_t filePlay;
 	uint8_t i;
 	uint8_t transferDoneSAI;
 	uint8_t iQ;
@@ -34,6 +42,7 @@ typedef struct st_audioEngine{
 
 
 extern audioEngine_t audioEngine;
+extern audioFilePlay_t audioFilePlay;
 
 
 void audioEng_notifyThreads(bool isISR);
