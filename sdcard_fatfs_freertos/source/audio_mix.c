@@ -14,6 +14,14 @@ void audio_mixInit(void)
 	mixCh.semph  = xSemaphoreCreateBinary();
 }
 
+void audio_mixInMixCh(int16_t* toMix, uint32_t length)
+{
+	for(uint32_t i = 0; i < length; i++)
+	{
+		mixCh.buffer[mixCh.i+i] += filePlayBuffer[i];
+	}
+}
+
 void audio_mixInSaiBuffer(int16_t* toMix, uint32_t startIndex, uint32_t length)
 {
 	int j = startIndex;

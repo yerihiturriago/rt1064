@@ -99,12 +99,8 @@ static void audio_playThrd(void* arg)
 		f_read(&g_fileObject1, filePlayBuffer, bytesToRead, &numReadBytes);
 		lseek += numReadBytes;
 //		logApp("lseek = %d\r\n", lseek);
-//			audio_mixInSaiBuffer(filePlayBuffer, g_saiTransferDone ? SAI_BUFFER_HALF_SIZE:0, SAI_BUFFER_HALF_SIZE);
 		xSemaphoreTake(mixCh.semph, portMAX_DELAY);
-		for(int i = 0; i < SAI_BUFFER_HALF_SIZE; i++)
-		{
-			mixCh.buffer[mixCh.i+i] += filePlayBuffer[i];
-		}
+		audio_mixInMixCh(filePlayBuffer, SAI_BUFFER_HALF_SIZE);
 		xSemaphoreGive(mixCh.semph);
 		xSemaphoreGive(audioEngine.semph);
 	}

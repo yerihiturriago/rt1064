@@ -49,7 +49,7 @@ void audio_mixInSaiBuffer(int16_t* toMix, uint32_t startIndex, uint32_t length);
 void audio_mixBufferControlled(int16_t* toMix, uint8_t* transferDone, uint32_t* iRam);
 void audio_mixInChannel(AudioMixConfig_t* config);
 void audio_getConfigByRequest(reqPad_t* reqPad, AudioMixConfig_t* config);
-
+void audio_mixInMixCh(int16_t* toMix, uint32_t length);
 
 #endif
 
