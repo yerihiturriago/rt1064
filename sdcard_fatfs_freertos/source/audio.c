@@ -28,22 +28,24 @@ void audio_playNoThrd(const char* fileName)
 	uint32_t len;
 	uint8_t transferDoneCopy;
 
-	printf("audio play no thrd\r\n");
+	logApp("audio play no thrd\r\n");
 
 	if((r = f_open(&g_fileObject1, _T(fileName), FA_READ)) != FR_OK)
 	{
 		printf("error opening file: %d\r\n", r);
 		return;
 	}
-
+	logApp("audio play no thrd: f_read wav\r\n");
 	f_read(&g_fileObject1, &wav, 44, &lseek);
 	fileSize = wav.fileSize;
+	logApp("audio play no thrd: read file portion\r\n");
 	f_read(&g_fileObject1, filePlayBuffer, SAI_BUFFER_HALF_SIZE_BYTES, &numReadBytes);
 	lseek += numReadBytes;
 	transferDoneCopy = g_saiTransferDone;
 	g_isPlayingAudio = true;
 	while((lseek < fileSize) && g_isPlayingAudio)
 	{
+//		logApp("audio play no thrd: semaphore take\r\n");
 		xSemaphoreTake(audioEngine.semph, portMAX_DELAY);
 		if(g_saiTransferDone != transferDoneCopy)
 		{
@@ -54,9 +56,10 @@ void audio_playNoThrd(const char* fileName)
 				bytesToRead = fileSize - lseek;
 			f_read(&g_fileObject1, filePlayBuffer, bytesToRead, &numReadBytes);
 			logApp("audio_playNoThrd: lseek = %d\r\n", lseek);
-//			printf("audio_playNoThrd: lseek = %d\r\n", lseek);
-//			memcpy(&saiBuffer[transferDoneCopy ? 0:SAI_BUFFER_HALF_SIZE], filePlayBuffer, SAI_BUFFER_HALF_SIZE_BYTES);
-			memcpy(&saiBuffer[transferDoneCopy ? SAI_BUFFER_HALF_SIZE:0], filePlayBuffer, SAI_BUFFER_HALF_SIZE_BYTES);
+			xSemaphoreTake(mixCh.semph, portMAX_DELAY);
+//			memcpy(&saiBuffer[transferDoneCopy ? SAI_BUFFER_HALF_SIZE:0], filePlayBuffer, SAI_BUFFER_HALF_SIZE_BYTES);
+			memcpy(&mixCh.buffer[mixCh.i], filePlayBuffer, SAI_BUFFER_HALF_SIZE_BYTES);
+			xSemaphoreGive(mixCh.semph);
 			lseek += numReadBytes;
 		}
 		xSemaphoreGive(audioEngine.semph);
