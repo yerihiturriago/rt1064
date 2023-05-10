@@ -78,7 +78,7 @@ static void audio_playThrd(void* arg)
 	printf("audio play thrd\r\n");
 
 
-	if((r = f_open(&g_fileObject1, _T("bullet.wav"), FA_READ)) != FR_OK)
+	if((r = f_open(&g_fileObject1, _T((const char*)arg), FA_READ)) != FR_OK)
 	{
 		printf("error opening file: %d\r\n", r);
 		return;
