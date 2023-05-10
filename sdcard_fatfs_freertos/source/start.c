@@ -37,8 +37,8 @@ static void start_mainThread(void* arg)
 	audioEng_init();
 	OSA_TimeDelay(200);
 
-//	audio_play("bullet.wav");
-	audio_playNoThrd("bullet.wav");
+	audio_play("bullet.wav");
+//	audio_playNoThrd("bullet.wav");
 //	while(1)
 //	{
 //		for(int i = 0; i < 3; i++)

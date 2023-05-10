@@ -57,7 +57,6 @@ void audio_playNoThrd(const char* fileName)
 			f_read(&g_fileObject1, filePlayBuffer, bytesToRead, &numReadBytes);
 //			logApp("audio_playNoThrd: lseek = %d\r\n", lseek);
 			xSemaphoreTake(mixCh.semph, portMAX_DELAY);
-//			memcpy(&saiBuffer[transferDoneCopy ? SAI_BUFFER_HALF_SIZE:0], filePlayBuffer, SAI_BUFFER_HALF_SIZE_BYTES);
 			memcpy(&mixCh.buffer[mixCh.i], filePlayBuffer, SAI_BUFFER_HALF_SIZE_BYTES);
 			xSemaphoreGive(mixCh.semph);
 			lseek += numReadBytes;
@@ -75,7 +74,6 @@ static void audio_playThrd(void* arg)
 	uint32_t fileSize;
 	uint32_t numReadBytes = 0;
 	uint32_t bytesToRead;
-	uint32_t len;
 	uint8_t halfTransferCopy;
 
 	printf("audio play thrd\r\n");
@@ -94,7 +92,6 @@ static void audio_playThrd(void* arg)
 	logApp("while\r\n");
 	while(g_isPlayingAudio && (lseek < fileSize))
 	{
-//		logApp("lseek = %d\r\n", lseek);
 		xSemaphoreTake(audioEngine.semph, portMAX_DELAY);
 		if(halfTransferCopy != g_saiTransferDone)
 		{
@@ -104,21 +101,21 @@ static void audio_playThrd(void* arg)
 			else
 				bytesToRead = fileSize - lseek;
 
-			f_read(&g_fileObject1, filePlayBuffer, SAI_BUFFER_HALF_SIZE_BYTES, &numReadBytes);
-			lseek += bytesToRead;
-//			printf("lseek = %d\r\n", lseek);
-			logApp("lseek = %d\r\n", lseek);
+			f_read(&g_fileObject1, filePlayBuffer, bytesToRead, &numReadBytes);
+			lseek += numReadBytes;
+//			logApp("lseek = %d\r\n", lseek);
 //			audio_mixInSaiBuffer(filePlayBuffer, g_saiTransferDone ? SAI_BUFFER_HALF_SIZE:0, SAI_BUFFER_HALF_SIZE);
-			len = g_saiTransferDone ? SAI_BUFFER_HALF_SIZE:0 + SAI_BUFFER_HALF_SIZE;
-			for(int i = g_saiTransferDone ? SAI_BUFFER_HALF_SIZE:0; i < len; i++)
+			xSemaphoreTake(mixCh.semph, portMAX_DELAY);
+			for(int i = 0; i < SAI_BUFFER_HALF_SIZE; i++)
 			{
-				saiBuffer[i] = filePlayBuffer[i];
+				mixCh.buffer[mixCh.i+i] += filePlayBuffer[i];
 			}
-			xTaskNotifyWait(ULONG_MAX, ULONG_MAX, NULL, portMAX_DELAY);
-
+			xSemaphoreGive(mixCh.semph);
 		}
 		xSemaphoreGive(audioEngine.semph);
+		xTaskNotifyWait(ULONG_MAX, ULONG_MAX, NULL, portMAX_DELAY);
 	}
+	logApp("audio thrad file: lseek = %d\r\n", lseek);
 	vTaskDelete(NULL);
 }
 
