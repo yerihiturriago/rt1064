@@ -17,7 +17,54 @@ void audio_play(const char* fileName)
     }
 }
 
-void audio_playThrd(void* arg)
+void audio_playNoThrd(const char* fileName)
+{
+	uint8_t r;
+	uint32_t lseek = 0;
+	wav_header_t wav;
+	uint32_t fileSize;
+	uint32_t numReadBytes = 0;
+	uint32_t bytesToRead;
+	uint32_t len;
+	uint8_t transferDoneCopy;
+
+	printf("audio play no thrd\r\n");
+
+	if((r = f_open(&g_fileObject1, _T(fileName), FA_READ)) != FR_OK)
+	{
+		printf("error opening file: %d\r\n", r);
+		return;
+	}
+
+	f_read(&g_fileObject1, &wav, 44, &lseek);
+	fileSize = wav.fileSize;
+	f_read(&g_fileObject1, filePlayBuffer, SAI_BUFFER_HALF_SIZE_BYTES, &numReadBytes);
+	lseek += numReadBytes;
+	transferDoneCopy = g_saiTransferDone;
+	g_isPlayingAudio = true;
+	while((lseek < fileSize) && g_isPlayingAudio)
+	{
+		xSemaphoreTake(audioEngine.semph, portMAX_DELAY);
+		if(g_saiTransferDone != transferDoneCopy)
+		{
+			transferDoneCopy = g_saiTransferDone;
+			if(fileSize - lseek >= SAI_BUFFER_HALF_SIZE_BYTES)
+				bytesToRead = SAI_BUFFER_HALF_SIZE_BYTES;
+			else
+				bytesToRead = fileSize - lseek;
+			f_read(&g_fileObject1, filePlayBuffer, bytesToRead, &numReadBytes);
+			logApp("audio_playNoThrd: lseek = %d\r\n", lseek);
+//			printf("audio_playNoThrd: lseek = %d\r\n", lseek);
+//			memcpy(&saiBuffer[transferDoneCopy ? 0:SAI_BUFFER_HALF_SIZE], filePlayBuffer, SAI_BUFFER_HALF_SIZE_BYTES);
+			memcpy(&saiBuffer[transferDoneCopy ? SAI_BUFFER_HALF_SIZE:0], filePlayBuffer, SAI_BUFFER_HALF_SIZE_BYTES);
+			lseek += numReadBytes;
+		}
+		xSemaphoreGive(audioEngine.semph);
+	}
+
+}
+
+static void audio_playThrd(void* arg)
 {
 	uint8_t r;
 	uint32_t lseek = 0;
