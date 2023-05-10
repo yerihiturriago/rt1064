@@ -74,7 +74,6 @@ static void audio_playThrd(void* arg)
 	uint32_t fileSize;
 	uint32_t numReadBytes = 0;
 	uint32_t bytesToRead;
-	uint8_t halfTransferCopy;
 
 	printf("audio play thrd\r\n");
 
@@ -87,33 +86,27 @@ static void audio_playThrd(void* arg)
 
 	f_read(&g_fileObject1, &wav, 44, &lseek);
 	fileSize = wav.fileSize;
-	halfTransferCopy = g_saiTransferDone;
 	g_isPlayingAudio = true;
-	logApp("while\r\n");
 	while(g_isPlayingAudio && (lseek < fileSize))
 	{
-		xSemaphoreTake(audioEngine.semph, portMAX_DELAY);
-		if(halfTransferCopy != g_saiTransferDone)
-		{
-			halfTransferCopy = g_saiTransferDone;
-			if(fileSize - lseek >= SAI_BUFFER_HALF_SIZE_BYTES)
-				bytesToRead = SAI_BUFFER_HALF_SIZE_BYTES;
-			else
-				bytesToRead = fileSize - lseek;
-
-			f_read(&g_fileObject1, filePlayBuffer, bytesToRead, &numReadBytes);
-			lseek += numReadBytes;
-//			logApp("lseek = %d\r\n", lseek);
-//			audio_mixInSaiBuffer(filePlayBuffer, g_saiTransferDone ? SAI_BUFFER_HALF_SIZE:0, SAI_BUFFER_HALF_SIZE);
-			xSemaphoreTake(mixCh.semph, portMAX_DELAY);
-			for(int i = 0; i < SAI_BUFFER_HALF_SIZE; i++)
-			{
-				mixCh.buffer[mixCh.i+i] += filePlayBuffer[i];
-			}
-			xSemaphoreGive(mixCh.semph);
-		}
-		xSemaphoreGive(audioEngine.semph);
 		xTaskNotifyWait(ULONG_MAX, ULONG_MAX, NULL, portMAX_DELAY);
+		xSemaphoreTake(audioEngine.semph, portMAX_DELAY);
+		if(fileSize - lseek >= SAI_BUFFER_HALF_SIZE_BYTES)
+			bytesToRead = SAI_BUFFER_HALF_SIZE_BYTES;
+		else
+			bytesToRead = fileSize - lseek;
+
+		f_read(&g_fileObject1, filePlayBuffer, bytesToRead, &numReadBytes);
+		lseek += numReadBytes;
+//		logApp("lseek = %d\r\n", lseek);
+//			audio_mixInSaiBuffer(filePlayBuffer, g_saiTransferDone ? SAI_BUFFER_HALF_SIZE:0, SAI_BUFFER_HALF_SIZE);
+		xSemaphoreTake(mixCh.semph, portMAX_DELAY);
+		for(int i = 0; i < SAI_BUFFER_HALF_SIZE; i++)
+		{
+			mixCh.buffer[mixCh.i+i] += filePlayBuffer[i];
+		}
+		xSemaphoreGive(mixCh.semph);
+		xSemaphoreGive(audioEngine.semph);
 	}
 	logApp("audio thrad file: lseek = %d\r\n", lseek);
 	vTaskDelete(NULL);
