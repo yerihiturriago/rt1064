@@ -6,7 +6,7 @@
 #include "sai_os.h"
 
 bool g_saiTransferDone = true;
-__DATA(RAM4) int16_t saiBuffer[SAI_BUFFER_SIZE];
+int16_t saiBuffer[SAI_BUFFER_SIZE];
 __DATA(RAM4) int16_t filePlayBuffer[SAI_BUFFER_HALF_SIZE];
 sai_transfer_t xfer[1] = {
     {
@@ -39,6 +39,7 @@ void fun_edma_halfTransferCallback(struct _edma_handle *handle, void *userData, 
 	xSemaphoreTakeFromISR(audioEngine.semph, &higherPriority);
 	g_saiTransferDone = transferDone;
 	audioEngine.transferDoneSAI = transferDone;
+	xSemaphoreGiveFromISR(audioEngine.semph, NULL);
 
 	xSemaphoreTakeFromISR(mixCh.semph, &higherPriority);
 	if(mixCh.i >= AUDIO_BUFFER_MIX_SIZE - 1)
@@ -51,7 +52,7 @@ void fun_edma_halfTransferCallback(struct _edma_handle *handle, void *userData, 
 	mixCh.j = (mixCh.i+SAI_BUFFER_HALF_SIZE);
 
 	xSemaphoreGiveFromISR(mixCh.semph, NULL);
-	xSemaphoreGiveFromISR(audioEngine.semph, NULL);
+//	xSemaphoreGiveFromISR(audioEngine.semph, NULL);
 
 	for(int i = 0; i < AUDIO_THRD_NUM; i++)
 		if(audioEngine.thrds[i] != NULL)
