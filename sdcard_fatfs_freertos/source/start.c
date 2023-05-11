@@ -10,6 +10,8 @@ void start_initModules(void)
 		audioEngine.thrds[i] = NULL;
     sai_os_init();
     sd_os_init();
+    logApp_init();
+    button_init();
 }
 
 void start_main(void)
@@ -21,6 +23,7 @@ void start_main(void)
     	printf("error creating card detect task\r\n");
         return;
     }
+
 }
 
 
@@ -32,27 +35,26 @@ static void start_mainThread(void* arg)
 //	audio_play("bullet.wav");
 	audio_initRamBuffers();
 	pad_loadDefaultPads();
-	logApp_init();
+//	logApp_init();
 	OSA_TimeDelay(200);
 	audioEng_init();
 	OSA_TimeDelay(200);
 
 //	audio_play("bullet.wav");
 //	audio_playNoThrd("bullet.wav");
-	while(1)
-	{
-		for(int i = 0; i < 16; i++)
-		{
-			audio_padPlay(0, 124);
-			OSA_TimeDelay(100);
-		}
-		for(int i = 0; i < 4; i++)
-		{
-			audio_padPlay(0, 124);
-			OSA_TimeDelay(800 );
-		}
-//		OSA_TimeDelay(5000);
-	}
+//	while(1)
+//	{
+//		for(int i = 0; i < 16; i++)
+//		{
+//			audio_padPlay(0, 124);
+//			OSA_TimeDelay(100);
+//		}
+//		for(int i = 0; i < 4; i++)
+//		{
+//			audio_padPlay(0, 124);
+//			OSA_TimeDelay(800 );
+//		}
+//	}
 
 	while(1);
 	vTaskDelete(NULL);

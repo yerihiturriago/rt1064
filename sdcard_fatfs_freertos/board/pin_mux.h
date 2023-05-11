@@ -37,7 +37,7 @@ extern "C" {
  */
 void BOARD_InitBootPins(void);
 
-#define BOARD_INITPINS_IOMUXC_GPR_GPR26_GPIO_MUX1_GPIO_SEL_MASK 0x20U /*!< GPIO1 and GPIO6 share same IO MUX function, GPIO_MUX1 selects one GPIO function: affected bits mask */
+#define BOARD_INITPINS_IOMUXC_GPR_GPR26_GPIO_MUX1_GPIO_SEL_MASK 0x10000020U /*!< GPIO1 and GPIO6 share same IO MUX function, GPIO_MUX1 selects one GPIO function: affected bits mask */
 #define BOARD_INITPINS_IOMUXC_GPR_GPR27_GPIO_MUX2_GPIO_SEL_MASK 0x10000000U /*!< GPIO2 and GPIO7 share same IO MUX function, GPIO_MUX2 selects one GPIO function: affected bits mask */
 
 /* GPIO_AD_B0_05 (coord G14), CAN_STBY/BOOT_MODE[1]/Flash_RST/U12[8] */
@@ -131,6 +131,20 @@ void BOARD_InitBootPins(void);
 /* Routed pin properties */
 #define BOARD_LCDIF_D15_PERIPHERAL                                          SAI1   /*!< Peripheral name */
 #define BOARD_LCDIF_D15_SIGNAL                                       sai_tx_sync   /*!< Signal name */
+
+/* GPIO_AD_B1_12 (coord H12), BUTTON_B28 */
+/* Routed pin properties */
+#define BOARD_BUTTON_B28_PERIPHERAL                                        GPIO1   /*!< Peripheral name */
+#define BOARD_BUTTON_B28_SIGNAL                                          gpio_io   /*!< Signal name */
+#define BOARD_BUTTON_B28_CHANNEL                                             28U   /*!< Signal channel */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_BUTTON_B28_GPIO                                              GPIO1   /*!< GPIO peripheral base pointer */
+#define BOARD_BUTTON_B28_GPIO_PIN                                            28U   /*!< GPIO pin number */
+#define BOARD_BUTTON_B28_GPIO_PIN_MASK                               (1U << 28U)   /*!< GPIO pin mask */
+#define BOARD_BUTTON_B28_PORT                                              GPIO1   /*!< PORT peripheral base pointer */
+#define BOARD_BUTTON_B28_PIN                                                 28U   /*!< PORT pin number */
+#define BOARD_BUTTON_B28_PIN_MASK                                    (1U << 28U)   /*!< PORT pin mask */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.

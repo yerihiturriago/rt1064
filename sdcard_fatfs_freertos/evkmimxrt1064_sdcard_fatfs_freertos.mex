@@ -25,6 +25,9 @@
          </generated_project_files>
          <pins_profile>
             <processor_version>13.0.2</processor_version>
+            <pin_labels>
+               <pin_label pin_num="H12" pin_signal="GPIO_AD_B1_12" label="BUTTON_B28" identifier="CSI_D5;BUTTON_B28"/>
+            </pin_labels>
             <power_domains/>
          </pins_profile>
          <functions_list>
@@ -52,12 +55,22 @@
                         <data>true</data>
                      </feature>
                   </dependency>
+                  <dependency resourceType="Peripheral" resourceId="GPIO1" description="Peripheral GPIO1 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
+                     <feature name="initialized" evaluation="equal">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
                      </feature>
                   </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.iomuxc" description="Pins initialization requires the IOMUXC Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
+                     <feature name="enabled" evaluation="equal" configuration="core0">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.igpio" description="Pins initialization requires the IGPIO Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
                      </feature>
@@ -78,6 +91,12 @@
                   <pin peripheral="SAI1" signal="sai_tx_data0" pin_num="B11" pin_signal="GPIO_B1_01"/>
                   <pin peripheral="SAI1" signal="sai_tx_bclk" pin_num="C11" pin_signal="GPIO_B1_02"/>
                   <pin peripheral="SAI1" signal="sai_tx_sync" pin_num="D11" pin_signal="GPIO_B1_03"/>
+                  <pin peripheral="GPIO1" signal="gpio_io, 28" pin_num="H12" pin_signal="GPIO_AD_B1_12">
+                     <pin_features>
+                        <pin_feature name="identifier" value="BUTTON_B28"/>
+                        <pin_feature name="direction" value="INPUT"/>
+                     </pin_features>
+                  </pin>
                </pins>
             </function>
          </functions_list>

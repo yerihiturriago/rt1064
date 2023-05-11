@@ -35,6 +35,7 @@
 #include "pad.h"
 #include "file_os.h"
 #include "logApp.h"
+#include "button.h"
 
 
 

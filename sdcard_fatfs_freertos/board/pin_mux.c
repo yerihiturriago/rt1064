@@ -12,11 +12,14 @@ package_id: MIMXRT1064DVL6A
 mcu_data: ksdk2_0
 processor_version: 13.0.2
 board: MIMXRT1064-EVK
+pin_labels:
+- {pin_num: H12, pin_signal: GPIO_AD_B1_12, label: BUTTON_B28, identifier: CSI_D5;BUTTON_B28}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 
 #include "fsl_common.h"
 #include "fsl_iomuxc.h"
+#include "fsl_gpio.h"
 #include "pin_mux.h"
 
 /* FUNCTION ************************************************************************************************************
@@ -48,6 +51,7 @@ BOARD_InitPins:
   - {pin_num: B11, peripheral: SAI1, signal: sai_tx_data0, pin_signal: GPIO_B1_01}
   - {pin_num: C11, peripheral: SAI1, signal: sai_tx_bclk, pin_signal: GPIO_B1_02}
   - {pin_num: D11, peripheral: SAI1, signal: sai_tx_sync, pin_signal: GPIO_B1_03}
+  - {pin_num: H12, peripheral: GPIO1, signal: 'gpio_io, 28', pin_signal: GPIO_AD_B1_12, identifier: BUTTON_B28, direction: INPUT}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 
@@ -60,9 +64,19 @@ BOARD_InitPins:
 void BOARD_InitPins(void) {
   CLOCK_EnableClock(kCLOCK_Iomuxc);           
 
+  /* GPIO configuration of BUTTON_B28 on GPIO_AD_B1_12 (pin H12) */
+  gpio_pin_config_t BUTTON_B28_config = {
+      .direction = kGPIO_DigitalInput,
+      .outputLogic = 0U,
+      .interruptMode = kGPIO_NoIntmode
+  };
+  /* Initialize GPIO functionality on GPIO_AD_B1_12 (pin H12) */
+  GPIO_PinInit(GPIO1, 28U, &BUTTON_B28_config);
+
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_05_GPIO1_IO05, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_12_LPUART1_TX, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_13_LPUART1_RX, 0U); 
+  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_12_GPIO1_IO28, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_B1_01_SAI1_TX_DATA00, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_B1_02_SAI1_TX_BCLK, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_B1_03_SAI1_TX_SYNC, 0U); 
