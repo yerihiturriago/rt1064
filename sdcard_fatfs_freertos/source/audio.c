@@ -87,19 +87,9 @@ static void audio_playThrd(void* arg)
 	f_read(&g_fileObject1, &wav, 44, &lseek);
 	fileSize = wav.fileSize;
 	g_isPlayingAudio = true;
-	int c = 0;
 	while(g_isPlayingAudio && (lseek < fileSize))
 	{
 		xTaskNotifyWait(ULONG_MAX, ULONG_MAX, NULL, portMAX_DELAY);
-		c++;
-		switch(c)
-		{
-		case 1000: audioEngine.filePlay.volume = 1;
-		case 2000: audioEngine.filePlay.volume = 0.70;
-		case 3000: audioEngine.filePlay.volume = 0.25;
-		case 4000: audioEngine.filePlay.volume = 0.10; c = 0;
-		default: break;
-		}
 		xSemaphoreTake(audioEngine.semph, portMAX_DELAY);
 		if(fileSize - lseek >= SAI_BUFFER_HALF_SIZE_BYTES)
 			bytesToRead = SAI_BUFFER_HALF_SIZE_BYTES;
