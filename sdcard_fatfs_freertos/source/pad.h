@@ -27,7 +27,10 @@
 
 typedef struct st_audioPadChannel
 {
-	int16_t* buffer[PAD_SAMPLE_NUMBER];
+	int16_t* buffer[PAD_SAMPLE_NUMBER]; //pointer a ram
+	uint32_t i;							//indice
+	float volume;
+	SemaphoreHandle_t semph;
 }AudioPadChannel_t;
 
 

@@ -118,27 +118,27 @@ static void audio_playThrd(void* arg)
 
 void audio_thrdPadPlay(void* arg)
 {
-	uint8_t transferDone = 0;
+//	uint8_t transferDone = 0;
 	uint8_t value = 0;
-	uint8_t i = *((uint8_t*)arg);
+	uint8_t id = *((uint8_t*)arg);
 	TickType_t tick = pdMS_TO_TICKS( 200 );
 	AudioMixConfig_t config;
 
-	if(i >= AUDIO_THRD_NUM)
+	if(id >= AUDIO_THRD_NUM)
 		return;
 	vPortFree(arg);
-	logApp("threadId = %d. Working...\r\n", i);
+	logApp("threadId = %d. Working...\r\n", id);
 	reqPad_t reqPad = {0};
 	int16_t* padRam = NULL;
 	while(1)
 	{
-		OSA_MsgQGet(&(audioEngine.thrdQ[i]), &reqPad, osaWaitForever_c);
-		logApp("thrd[%d]: pad = %d, power = %d\r\n", i, reqPad.padNum, reqPad.power);
+		OSA_MsgQGet(&(audioEngine.thrdQ[id]), &reqPad, osaWaitForever_c);
+		logApp("thrd[%d]: pad = %d, power = %d\r\n", id, reqPad.padNum, reqPad.power);
 		audio_getConfigByRequest(&reqPad, &config);
 
 		xSemaphoreTake(audioEngine.semph, portMAX_DELAY);
-		audioEngine.thrdState[i] = AUDIO_THRD_STATE_BUSY;
-		transferDone = audioEngine.transferDoneSAI;
+		audioEngine.thrdState[id] = AUDIO_THRD_STATE_BUSY;
+//		transferDone = audioEngine.transferDoneSAI;
 		xSemaphoreGive(audioEngine.semph);
 
 		while(1)
@@ -146,25 +146,29 @@ void audio_thrdPadPlay(void* arg)
 			if(config.iMix >= PAD_SIZE_16BIT-1)
 				break;
 			xSemaphoreTake(audioEngine.semph, portMAX_DELAY);
-			transferDone = audioEngine.transferDoneSAI;
-			if(audioEngine.thrdState[i] == AUDIO_THRD_STATE_AVAIL)
+//			transferDone = audioEngine.transferDoneSAI;
+			if(audioEngine.thrdState[id] == AUDIO_THRD_STATE_AVAIL)
 			{
 				xSemaphoreGive(audioEngine.semph);
 				break;
 			}
 			xSemaphoreGive(audioEngine.semph);
 			xSemaphoreTake(mixCh.semph, portMAX_DELAY);
-//			logApp("thrd[%d]: iRam = %d, mixCh.i = %d\r\n", i, config.iMix, mixCh.i);
-			audio_mixInChannel(&config);
+//			logApp("thrd[%d]: iRam = %d, mixCh.i = %d\r\n", i, config.iMix, mixCh.id);
+//			audio_mixInChannel(&config);
+			for(int i = 0; i < SAI_BUFFER_HALF_SIZE; config.iMix++, i++)
+			{
+				mixCh.buffer[mixCh.i+i] += config.toMix[config.iMix];
+			}
 			xSemaphoreGive(mixCh.semph);
 			xTaskNotifyWait(ULONG_MAX, ULONG_MAX, NULL, portMAX_DELAY);
-//			logApp("thrd[%d]. task notification taken\r\n", i);
+//			logApp("thrd[%d]. task notification taken\r\n", id);
 		}
 		config.iMix = 0;
 		xSemaphoreTake(audioEngine.semph, portMAX_DELAY);
-		audioEngine.thrdState[i] = AUDIO_THRD_STATE_AVAIL;
+		audioEngine.thrdState[id] = AUDIO_THRD_STATE_AVAIL;
 		xSemaphoreGive(audioEngine.semph);
-//		logApp("thrd[%d]: %d. pad thread finished. iRam = %d\r\n", i, iRam);
+//		logApp("thrd[%d]: %d. pad thread finished. iRam = %d\r\n", id, iRam);
 	}
 	vTaskDelete(NULL);
 }

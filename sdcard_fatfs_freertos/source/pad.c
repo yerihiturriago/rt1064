@@ -14,15 +14,15 @@ __NOINIT(RAM4) int16_t crash1Ram[PAD_SIZE_16BIT];
 __NOINIT(RAM4) int16_t crash2Ram[PAD_SIZE_16BIT];
 __NOINIT(RAM4) int16_t chinaRam[PAD_SIZE_16BIT];
 
-AudioPadChannel_t snareCh 	= {.buffer = {snareRam,  NULL, NULL}};
-AudioPadChannel_t kickCh 	= {.buffer = {kickRam,   NULL, NULL}};
-AudioPadChannel_t hithatCh 	= {.buffer = {hithatRam, NULL, NULL}};
-AudioPadChannel_t tom1Ch 	= {.buffer = {tom1Ram,   NULL, NULL}};
-AudioPadChannel_t tom2Ch 	= {.buffer = {tom2Ram,   NULL, NULL}};
-AudioPadChannel_t tom3Ch 	= {.buffer = {tom3Ram,   NULL, NULL}};
-AudioPadChannel_t crash1Ch 	= {.buffer = {crash1Ram, NULL, NULL}};
-AudioPadChannel_t crash2Ch 	= {.buffer = {crash2Ram, NULL, NULL}};
-AudioPadChannel_t chinaCh 	= {.buffer = {chinaRam,  NULL, NULL}};
+AudioPadChannel_t snareCh 	= {.buffer = {snareRam,  NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
+AudioPadChannel_t kickCh 	= {.buffer = {kickRam,   NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
+AudioPadChannel_t hithatCh 	= {.buffer = {hithatRam, NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
+AudioPadChannel_t tom1Ch 	= {.buffer = {tom1Ram,   NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
+AudioPadChannel_t tom2Ch 	= {.buffer = {tom2Ram,   NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
+AudioPadChannel_t tom3Ch 	= {.buffer = {tom3Ram,   NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
+AudioPadChannel_t crash1Ch 	= {.buffer = {crash1Ram, NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
+AudioPadChannel_t crash2Ch 	= {.buffer = {crash2Ram, NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
+AudioPadChannel_t chinaCh 	= {.buffer = {chinaRam,  NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
 
 
 

@@ -27,6 +27,8 @@ typedef struct st_audioMixChannel
 
 
 
+
+
 typedef struct st_audioMixConfig
 {
 	AudioMixChannel_t* mixCh; 	//Canal de mezcla
