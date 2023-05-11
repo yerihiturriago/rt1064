@@ -242,3 +242,20 @@ static void test_thrdLoadInRam32MB(void* arg)
 
 }
 
+
+void test_playSnareSequence(void)
+{
+	while(1)
+	{
+		for(int i = 0; i < 16; i++)
+		{
+			audio_padPlay(0, 124);
+			OSA_TimeDelay(100);
+		}
+		for(int i = 0; i < 4; i++)
+		{
+			audio_padPlay(0, 124);
+			OSA_TimeDelay(800 );
+		}
+	}
+}

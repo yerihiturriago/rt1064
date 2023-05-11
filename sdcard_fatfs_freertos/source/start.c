@@ -42,19 +42,7 @@ static void start_mainThread(void* arg)
 
 //	audio_play("bullet.wav");
 //	audio_playNoThrd("bullet.wav");
-//	while(1)
-//	{
-//		for(int i = 0; i < 16; i++)
-//		{
-//			audio_padPlay(0, 124);
-//			OSA_TimeDelay(100);
-//		}
-//		for(int i = 0; i < 4; i++)
-//		{
-//			audio_padPlay(0, 124);
-//			OSA_TimeDelay(800 );
-//		}
-//	}
+	test_playSnareSequence();
 
 	while(1);
 	vTaskDelete(NULL);
