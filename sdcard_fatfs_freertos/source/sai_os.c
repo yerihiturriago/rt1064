@@ -16,14 +16,11 @@ sai_transfer_t xfer[1] = {
 };
 
 const UBaseType_t xArrayIndex = 1;
-SemaphoreHandle_t semph_td = NULL;
 
 
 void sai_os_init(void)
 {
     memset(saiBuffer, 0, sizeof(saiBuffer));
-    semph_td = xSemaphoreCreateBinary();
-    audioEngine.semph = xSemaphoreCreateBinary();
     audio_mixInit();
 
     EDMA_SetCallback(SAI1_SAI_Tx_eDMA_Handle.dmaHandle, fun_edma_halfTransferCallback, NULL);

@@ -4,26 +4,6 @@
 #include <cr_section_macros.h>
 #include "pad.h"
 
-__NOINIT(RAM4) int16_t snareRam[PAD_SIZE_16BIT];
-__NOINIT(RAM4) int16_t kickRam[PAD_SIZE_16BIT];
-__NOINIT(RAM4) int16_t hithatRam[PAD_SIZE_16BIT];
-__NOINIT(RAM4) int16_t tom1Ram[PAD_SIZE_16BIT];
-__NOINIT(RAM4) int16_t tom2Ram[PAD_SIZE_16BIT];
-__NOINIT(RAM4) int16_t tom3Ram[PAD_SIZE_16BIT];
-__NOINIT(RAM4) int16_t crash1Ram[PAD_SIZE_16BIT];
-__NOINIT(RAM4) int16_t crash2Ram[PAD_SIZE_16BIT];
-__NOINIT(RAM4) int16_t chinaRam[PAD_SIZE_16BIT];
-
-AudioPadChannel_t snareCh 	= {.buffer = {snareRam,  NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
-AudioPadChannel_t kickCh 	= {.buffer = {kickRam,   NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
-AudioPadChannel_t hithatCh 	= {.buffer = {hithatRam, NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
-AudioPadChannel_t tom1Ch 	= {.buffer = {tom1Ram,   NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
-AudioPadChannel_t tom2Ch 	= {.buffer = {tom2Ram,   NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
-AudioPadChannel_t tom3Ch 	= {.buffer = {tom3Ram,   NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
-AudioPadChannel_t crash1Ch 	= {.buffer = {crash1Ram, NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
-AudioPadChannel_t crash2Ch 	= {.buffer = {crash2Ram, NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
-AudioPadChannel_t chinaCh 	= {.buffer = {chinaRam,  NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
-
 
 
 void pad_loadDefaultPads(void)
@@ -110,26 +90,4 @@ int16_t* pad_getRamByNumber(uint8_t padNum)
 		default: 			return snareRam;
 	}
 }
-
-
-
-AudioPadChannel_t* pad_getRamByNumAndPower(uint8_t padNum)
-{
-	switch(padNum)
-	{
-		case PAD_SNARE: 	return &snareCh;
-		case PAD_KICK: 		return &kickCh;
-		case PAD_HITHAT: 	return &hithatCh;
-		case PAD_TOM1: 		return &tom1Ch;
-		case PAD_TOM2: 		return &tom2Ch;
-		case PAD_TOM3: 		return &tom3Ch;
-		case PAD_CRASH1: 	return &crash1Ch;
-		case PAD_CRASH2: 	return &crash2Ch;
-		case PAD_CHINA: 	return &chinaCh;
-//		case PAD_SPLASH: 	return splas;
-		default: 			return &snareCh;
-	}
-}
-
-
 

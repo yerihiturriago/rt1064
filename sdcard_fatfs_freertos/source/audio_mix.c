@@ -6,12 +6,48 @@
 
 __NOINIT(RAM4) AudioMixChannel_t mixCh;
 
+
+__NOINIT(RAM4) int16_t snareRam[PAD_SIZE_16BIT];
+__NOINIT(RAM4) int16_t kickRam[PAD_SIZE_16BIT];
+__NOINIT(RAM4) int16_t hithatRam[PAD_SIZE_16BIT];
+__NOINIT(RAM4) int16_t tom1Ram[PAD_SIZE_16BIT];
+__NOINIT(RAM4) int16_t tom2Ram[PAD_SIZE_16BIT];
+__NOINIT(RAM4) int16_t tom3Ram[PAD_SIZE_16BIT];
+__NOINIT(RAM4) int16_t crash1Ram[PAD_SIZE_16BIT];
+__NOINIT(RAM4) int16_t crash2Ram[PAD_SIZE_16BIT];
+__NOINIT(RAM4) int16_t chinaRam[PAD_SIZE_16BIT];
+
+
+AudioPadChannel_t snareCh 	= {.buffer = {snareRam,  NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
+AudioPadChannel_t kickCh 	= {.buffer = {kickRam,   NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
+AudioPadChannel_t hithatCh 	= {.buffer = {hithatRam, NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
+AudioPadChannel_t tom1Ch 	= {.buffer = {tom1Ram,   NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
+AudioPadChannel_t tom2Ch 	= {.buffer = {tom2Ram,   NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
+AudioPadChannel_t tom3Ch 	= {.buffer = {tom3Ram,   NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
+AudioPadChannel_t crash1Ch 	= {.buffer = {crash1Ram, NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
+AudioPadChannel_t crash2Ch 	= {.buffer = {crash2Ram, NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
+AudioPadChannel_t chinaCh 	= {.buffer = {chinaRam,  NULL, NULL}, .volume = 1, .i = 0, .semph = NULL};
+
+
+
 void audio_mixInit(void)
 {
 	mixCh.i 	 = 0;
 	mixCh.j 	 = 0;
 	mixCh.volume = 0;
 	mixCh.semph  = xSemaphoreCreateBinary();
+
+    snareCh.semph 		= xSemaphoreCreateBinary();
+    kickCh.semph 		= xSemaphoreCreateBinary();
+    hithatCh.semph 		= xSemaphoreCreateBinary();
+    tom1Ch.semph 		= xSemaphoreCreateBinary();
+    tom2Ch.semph 		= xSemaphoreCreateBinary();
+    tom3Ch.semph	 	= xSemaphoreCreateBinary();
+    crash1Ch.semph 		= xSemaphoreCreateBinary();
+    crash2Ch.semph 		= xSemaphoreCreateBinary();
+    chinaCh.semph		= xSemaphoreCreateBinary();
+
+    audioEngine.semph 	= xSemaphoreCreateBinary();
 }
 
 void audio_mixInMixCh(int16_t* toMix, uint32_t length)
@@ -50,36 +86,39 @@ void audio_getConfigByRequest(reqPad_t* reqPad, AudioMixConfig_t* config)
 	config->padNum = reqPad->padNum;
 	config->power  = reqPad->power;
 	config->mixCh  = &mixCh;
+	config->padCh  = audio_getPadChannelByNumber(reqPad->padNum);
 	config->toMix  = pad_getRamByNumber(reqPad->padNum);
 }
 
 void audio_mixInChannel(AudioMixConfig_t* config)
 {
-	uint32_t i;
-	uint32_t length = mixCh.i + SAI_BUFFER_HALF_SIZE;
-	int16_t* dst = config->mixCh->buffer;
-	int16_t* src = config->toMix;
-	uint32_t* iRam = &config->iMix;
-
-	if(PAD_SIZE_16BIT - *iRam >= AUDIO_BUFFER_SIZE)
-		config->lengthToMix = AUDIO_BUFFER_SIZE;
-	else
-		config->lengthToMix = PAD_SIZE_16BIT - *iRam;
-
 	float volumeByPower = audio_calculateVolumeByPower(config->power);
-	for(i = 0; i < SAI_BUFFER_HALF_SIZE; i++)
+//	logApp("volumeBypower = %.2f, volume = %.2f\r\n", volumeByPower, config->padCh->volume);
+	for(int i = 0; i < SAI_BUFFER_HALF_SIZE; config->iMix++, i++)
 	{
-		saiBuffer[i] = src[config->iMix];
-		config->iMix += 1;
+		mixCh.buffer[mixCh.i+i] += (int16_t)(config->toMix[config->iMix]*config->padCh->volume*volumeByPower);
 	}
-//	for(i = mixCh.i; i < length; i++)
-//	{
-//		mixCh.buffer[i] += src[config->iMix];
-//		config->iMix += 1;
-//	}
 }
 
 
+
+AudioPadChannel_t* audio_getPadChannelByNumber(uint8_t padNum)
+{
+	switch(padNum)
+	{
+		case PAD_SNARE: 	return &snareCh;
+		case PAD_KICK: 		return &kickCh;
+		case PAD_HITHAT: 	return &hithatCh;
+		case PAD_TOM1: 		return &tom1Ch;
+		case PAD_TOM2: 		return &tom2Ch;
+		case PAD_TOM3: 		return &tom3Ch;
+		case PAD_CRASH1: 	return &crash1Ch;
+		case PAD_CRASH2: 	return &crash2Ch;
+		case PAD_CHINA: 	return &chinaCh;
+//		case PAD_SPLASH: 	return splas;
+		default: 			return &snareCh;
+	}
+}
 
 
 

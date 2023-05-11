@@ -49,7 +49,7 @@ static void start_mainThread(void* arg)
 		for(int i = 0; i < 4; i++)
 		{
 			audio_padPlay(0, 124);
-			OSA_TimeDelay(800);
+			OSA_TimeDelay(800 );
 		}
 //		OSA_TimeDelay(5000);
 	}

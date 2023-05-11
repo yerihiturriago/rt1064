@@ -43,3 +43,6 @@ float audio_calculateVolumeByPower(uint8_t power)
 	return ((float)power/PAD_MAX_POWER);
 }
 
+
+
+

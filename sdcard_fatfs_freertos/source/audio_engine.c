@@ -34,7 +34,7 @@ void audioEng_init(void)
 	{
 		uint8_t* ii = (uint8_t*)pvPortMalloc(sizeof(uint8_t));
 		*ii = i;
-		if (pdPASS != (r = xTaskCreate(audio_thrdPadPlay, "audio thrd pad play", 1024,
+		if (pdPASS != (r = xTaskCreate(audio_thrdPadPlay, "audio thrd pad play", 1536,
 				(void*)ii,
 				ACCESSFILE_TASK_PRIORITY,
 				&(audioEngine.thrds[i])))
@@ -91,5 +91,9 @@ void audioEng_thrdMix(void* arg)
 //		logApp("mix thrd: get notification\r\n");
 	}
 }
+
+
+
+
 
 

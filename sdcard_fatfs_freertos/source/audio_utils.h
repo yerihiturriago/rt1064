@@ -13,6 +13,7 @@ osa_msgq_handle_t* audio_getNextQueue(void);
 void audio_initRamBuffers(void);
 float audio_calculateVolumeByPower(uint8_t intensity);
 
+
 #endif
 
 
