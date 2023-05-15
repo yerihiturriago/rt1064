@@ -374,6 +374,73 @@ static void SEMC_init(void) {
 } */
 
 /***********************************************************************************************************************
+ * ADC1 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'ADC1'
+- type: 'adc_12b1msps_sar'
+- mode: 'ADC_GENERAL'
+- custom_name_enabled: 'false'
+- type_id: 'adc_12b1msps_sar_6a490e886349a7b2b07bed10ce7b299b'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'ADC1'
+- config_sets:
+  - fsl_adc:
+    - clockConfig:
+      - clockSource: 'kADC_ClockSourceAD'
+      - clockSourceFreq: 'custom:10 MHz'
+      - clockDriver: 'kADC_ClockDriver8'
+      - samplePeriodMode: 'kADC_SamplePeriodLong24Clcoks'
+      - enableAsynchronousClockOutput: 'true'
+    - conversionConfig:
+      - resolution: 'kADC_Resolution8Bit'
+      - hardwareAverageMode: 'kADC_HardwareAverageDisable'
+      - enableHardwareTrigger: 'software'
+      - enableHighSpeed: 'false'
+      - enableLowPower: 'false'
+      - enableContinuousConversion: 'false'
+      - enableOverWrite: 'true'
+      - enableDma: 'false'
+    - resultingTime: []
+    - resultCorrection:
+      - doAutoCalibration: 'false'
+      - offset: '0'
+    - hardwareCompareConfiguration:
+      - hardwareCompareMode: 'disabled'
+      - value1: '0'
+      - value2: '0'
+    - enableInterrupt: 'false'
+    - adc_interrupt:
+      - IRQn: 'ADC1_IRQn'
+      - enable_interrrupt: 'enabled'
+      - enable_priority: 'false'
+      - priority: '0'
+      - enable_custom_name: 'false'
+    - adc_channels_config: []
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const adc_config_t ADC1_config = {
+  .enableOverWrite = true,
+  .enableContinuousConversion = false,
+  .enableHighSpeed = false,
+  .enableLowPower = false,
+  .enableLongSample = true,
+  .enableAsynchronousClockOutput = true,
+  .referenceVoltageSource = kADC_ReferenceVoltageSourceAlt0,
+  .samplePeriodMode = kADC_SamplePeriodLong24Clcoks,
+  .clockSource = kADC_ClockSourceAD,
+  .clockDriver = kADC_ClockDriver8,
+  .resolution = kADC_Resolution8Bit
+};
+
+static void ADC1_init(void) {
+  /* Initialize ADC1 peripheral. */
+  ADC_Init(ADC1_PERIPHERAL, &ADC1_config);
+}
+
+/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 static void BOARD_InitPeripherals_CommonPostInit(void)
@@ -393,6 +460,7 @@ void BOARD_InitPeripherals(void)
   /* Initialize components */
   DMA0_init();
   SAI1_init();
+  ADC1_init();
   /* Common post-initialization */
   BOARD_InitPeripherals_CommonPostInit();
 }

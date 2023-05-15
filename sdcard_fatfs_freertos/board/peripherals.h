@@ -15,6 +15,7 @@
 #include "fsl_sai.h"
 #include "fsl_sai_edma.h"
 #include "fsl_clock.h"
+#include "fsl_adc.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -55,6 +56,11 @@ extern "C" {
 /* BOARD_InitPeripherals defines for SEMC */
 /* Definition of peripheral ID. */
 #define SEMC_PERIPHERAL SEMC
+/* BOARD_InitPeripherals defines for ADC1 */
+/* Definition of peripheral ID */
+#define ADC1_PERIPHERAL ADC1
+/* Definition of special channel interconnected with ADC_ETC which takes real channel to be measured from ADC_ETC. */
+#define ADC1_CHANNEL_DRIVEN_BY_ADC_ETC 16U
 
 /***********************************************************************************************************************
  * Global variables
@@ -63,6 +69,7 @@ extern const edma_config_t DMA0_config;
 extern sai_transceiver_t SAI1_Tx_config;
 extern edma_handle_t SAI1_TX_Handle;
 extern sai_edma_handle_t SAI1_SAI_Tx_eDMA_Handle;
+extern const adc_config_t ADC1_config;
 
 /***********************************************************************************************************************
  * Initialization functions

@@ -12,6 +12,7 @@ RM := rm -rf
 -include utilities/subdir.mk
 -include startup/subdir.mk
 -include source/subdir.mk
+-include sdmmc/template/usdhc/subdir.mk
 -include sdmmc/src/subdir.mk
 -include sdmmc/osa/subdir.mk
 -include sdmmc/host/subdir.mk

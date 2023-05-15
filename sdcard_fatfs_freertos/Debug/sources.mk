@@ -35,4 +35,5 @@ source \
 startup \
 utilities \
 xip \
+sdmmc/template/usdhc \
 
