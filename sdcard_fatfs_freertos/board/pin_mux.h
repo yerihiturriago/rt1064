@@ -146,6 +146,12 @@ void BOARD_InitBootPins(void);
 #define BOARD_BUTTON_B28_PIN                                                 28U   /*!< PORT pin number */
 #define BOARD_BUTTON_B28_PIN_MASK                                    (1U << 28U)   /*!< PORT pin mask */
 
+/* GPIO_AD_B1_00 (coord J11), ADC_AD_B1_00_B16 */
+/* Routed pin properties */
+#define BOARD_ADC_AD_B1_00_B16_PERIPHERAL                                   ADC1   /*!< Peripheral name */
+#define BOARD_ADC_AD_B1_00_B16_SIGNAL                                         IN   /*!< Signal name */
+#define BOARD_ADC_AD_B1_00_B16_CHANNEL                                        5U   /*!< Signal channel */
+
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
  *

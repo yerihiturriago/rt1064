@@ -26,6 +26,7 @@
 #include "sai_os.h"
 #include "sd_os.h"
 #include "test.h"
+#include "adc_os.h"
 #include "start.h"
 #include "wav.h"
 #include "audio_utils.h"
@@ -36,7 +37,6 @@
 #include "file_os.h"
 #include "logApp.h"
 #include "button.h"
-
 
 
 #ifndef GLOBAL_H_

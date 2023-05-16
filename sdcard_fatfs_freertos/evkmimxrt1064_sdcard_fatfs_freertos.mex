@@ -26,6 +26,7 @@
          <pins_profile>
             <processor_version>13.0.2</processor_version>
             <pin_labels>
+               <pin_label pin_num="J11" pin_signal="GPIO_AD_B1_00" label="ADC_AD_B1_00_B16" identifier="I2C_SCL_FXOS8700CQ;CSI_I2C_SCL;ADC_AD_B1_00_B16"/>
                <pin_label pin_num="H12" pin_signal="GPIO_AD_B1_12" label="BUTTON_B28" identifier="CSI_D5;BUTTON_B28"/>
             </pin_labels>
             <power_domains/>
@@ -56,6 +57,11 @@
                      </feature>
                   </dependency>
                   <dependency resourceType="Peripheral" resourceId="GPIO1" description="Peripheral GPIO1 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
+                     <feature name="initialized" evaluation="equal">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="Peripheral" resourceId="ADC1" description="Peripheral ADC1 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
@@ -95,6 +101,11 @@
                      <pin_features>
                         <pin_feature name="identifier" value="BUTTON_B28"/>
                         <pin_feature name="direction" value="INPUT"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="ADC1" signal="IN, 5" pin_num="J11" pin_signal="GPIO_AD_B1_00">
+                     <pin_features>
+                        <pin_feature name="identifier" value="ADC_AD_B1_00_B16"/>
                      </pin_features>
                   </pin>
                </pins>
@@ -651,12 +662,18 @@
                         <data type="Version">2.0.2</data>
                      </feature>
                   </dependency>
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="ADC1.adc_in.5" description="Signal IN, channel 5 is not routed." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="routed" evaluation="">
+                        <data type="Boolean">true</data>
+                     </feature>
+                  </dependency>
                </dependencies>
                <instances>
                   <instance name="NVIC" uuid="c8eee5d1-c168-42b0-8545-edf141320c4a" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="nvic">
                         <array name="interrupt_table">
                            <struct name="0"/>
+                           <struct name="1"/>
                         </array>
                         <array name="interrupts">
                            <struct name="0">
@@ -909,15 +926,23 @@
                            <setting name="value1" value="0"/>
                            <setting name="value2" value="0"/>
                         </struct>
-                        <setting name="enableInterrupt" value="false"/>
+                        <setting name="enableInterrupt" value="true"/>
                         <struct name="adc_interrupt">
                            <setting name="IRQn" value="ADC1_IRQn"/>
                            <setting name="enable_interrrupt" value="enabled"/>
-                           <setting name="enable_priority" value="false"/>
-                           <setting name="priority" value="0"/>
+                           <setting name="enable_priority" value="true"/>
+                           <setting name="priority" value="7"/>
                            <setting name="enable_custom_name" value="false"/>
                         </struct>
-                        <array name="adc_channels_config"/>
+                        <array name="adc_channels_config">
+                           <struct name="0">
+                              <setting name="channelNumber" value="IN.5"/>
+                              <setting name="channelName" value=""/>
+                              <setting name="channelGroup" value="0"/>
+                              <setting name="initializeChannel" value="true"/>
+                              <setting name="enableInterruptOnConversionCompleted" value="true"/>
+                           </struct>
+                        </array>
                      </config_set>
                   </instance>
                </instances>

@@ -259,3 +259,12 @@ void test_playSnareSequence(void)
 		}
 	}
 }
+
+void test_adc(void)
+{
+	while(1)
+	{
+		adc_os_readADC(NULL);
+		OSA_TimeDelay(2000);
+	}
+}

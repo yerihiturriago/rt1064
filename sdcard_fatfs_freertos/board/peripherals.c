@@ -116,6 +116,7 @@ instance:
   - nvic:
     - interrupt_table:
       - 0: []
+      - 1: []
     - interrupts:
       - 0:
         - channelId: 'int_0'
@@ -411,14 +412,20 @@ instance:
       - hardwareCompareMode: 'disabled'
       - value1: '0'
       - value2: '0'
-    - enableInterrupt: 'false'
+    - enableInterrupt: 'true'
     - adc_interrupt:
       - IRQn: 'ADC1_IRQn'
       - enable_interrrupt: 'enabled'
-      - enable_priority: 'false'
-      - priority: '0'
+      - enable_priority: 'true'
+      - priority: '7'
       - enable_custom_name: 'false'
-    - adc_channels_config: []
+    - adc_channels_config:
+      - 0:
+        - channelNumber: 'IN.5'
+        - channelName: ''
+        - channelGroup: '0'
+        - initializeChannel: 'true'
+        - enableInterruptOnConversionCompleted: 'true'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 const adc_config_t ADC1_config = {
@@ -434,10 +441,21 @@ const adc_config_t ADC1_config = {
   .clockDriver = kADC_ClockDriver8,
   .resolution = kADC_Resolution8Bit
 };
-
+const adc_channel_config_t ADC1_channels_config[1] = {
+  {
+    .channelNumber = 5U,
+    .enableInterruptOnConversionCompleted = true
+  }
+};
 static void ADC1_init(void) {
   /* Initialize ADC1 peripheral. */
   ADC_Init(ADC1_PERIPHERAL, &ADC1_config);
+  /* Initialize ADC1 channel 5. */
+  ADC_SetChannelConfig(ADC1_PERIPHERAL, ADC1_CH0_CONTROL_GROUP, &ADC1_channels_config[0]);
+  /* Interrupt vector ADC1_IRQn priority settings in the NVIC. */
+  NVIC_SetPriority(ADC1_IRQN, ADC1_IRQ_PRIORITY);
+  /* Enable interrupt ADC1_IRQn request in the NVIC. */
+  EnableIRQ(ADC1_IRQN);
 }
 
 /***********************************************************************************************************************

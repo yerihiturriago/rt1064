@@ -61,6 +61,14 @@ extern "C" {
 #define ADC1_PERIPHERAL ADC1
 /* Definition of special channel interconnected with ADC_ETC which takes real channel to be measured from ADC_ETC. */
 #define ADC1_CHANNEL_DRIVEN_BY_ADC_ETC 16U
+/* ADC1 interrupt vector ID (number). */
+#define ADC1_IRQN ADC1_IRQn
+/* ADC1 interrupt vector priority. */
+#define ADC1_IRQ_PRIORITY 6
+/* ADC1 interrupt handler identifier. */
+#define ADC1_IRQHANDLER ADC1_IRQHandler
+/* Channel 0 (IN.5) conversion control group. */
+#define ADC1_CH0_CONTROL_GROUP 0U
 
 /***********************************************************************************************************************
  * Global variables
@@ -70,6 +78,7 @@ extern sai_transceiver_t SAI1_Tx_config;
 extern edma_handle_t SAI1_TX_Handle;
 extern sai_edma_handle_t SAI1_SAI_Tx_eDMA_Handle;
 extern const adc_config_t ADC1_config;
+extern const adc_channel_config_t ADC1_channels_config[1];
 
 /***********************************************************************************************************************
  * Initialization functions

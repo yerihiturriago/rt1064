@@ -13,6 +13,7 @@ mcu_data: ksdk2_0
 processor_version: 13.0.2
 board: MIMXRT1064-EVK
 pin_labels:
+- {pin_num: J11, pin_signal: GPIO_AD_B1_00, label: ADC_AD_B1_00_B16, identifier: I2C_SCL_FXOS8700CQ;CSI_I2C_SCL;ADC_AD_B1_00_B16}
 - {pin_num: H12, pin_signal: GPIO_AD_B1_12, label: BUTTON_B28, identifier: CSI_D5;BUTTON_B28}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
@@ -52,6 +53,7 @@ BOARD_InitPins:
   - {pin_num: C11, peripheral: SAI1, signal: sai_tx_bclk, pin_signal: GPIO_B1_02}
   - {pin_num: D11, peripheral: SAI1, signal: sai_tx_sync, pin_signal: GPIO_B1_03}
   - {pin_num: H12, peripheral: GPIO1, signal: 'gpio_io, 28', pin_signal: GPIO_AD_B1_12, identifier: BUTTON_B28, direction: INPUT}
+  - {pin_num: J11, peripheral: ADC1, signal: 'IN, 5', pin_signal: GPIO_AD_B1_00, identifier: ADC_AD_B1_00_B16}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 
@@ -76,6 +78,7 @@ void BOARD_InitPins(void) {
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_05_GPIO1_IO05, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_12_LPUART1_TX, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_13_LPUART1_RX, 0U); 
+  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_00_GPIO1_IO16, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_12_GPIO1_IO28, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_B1_01_SAI1_TX_DATA00, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_B1_02_SAI1_TX_BCLK, 0U); 

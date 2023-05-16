@@ -18,6 +18,7 @@ void test_loadSawWave(void);
 void test_loadInRam32MB(void);
 static void test_thrdLoadInRam32MB(void* arg);
 void test_playSnareSequence(void);
+void test_adc(void);
 
 #endif
 

@@ -33,6 +33,7 @@ static void start_mainThread(void* arg)
 	printf("main thread working\r\n");
 //	test_playBullet();
 //	audio_play("bullet.wav");
+	adc_os_init();
 	audio_initRamBuffers();
 	pad_loadDefaultPads();
 //	logApp_init();
@@ -42,7 +43,8 @@ static void start_mainThread(void* arg)
 
 //	audio_play("bullet.wav");
 //	audio_playNoThrd("bullet.wav");
-	test_playSnareSequence();
+//	test_playSnareSequence();
+	test_adc();
 
 	while(1);
 	vTaskDelete(NULL);
